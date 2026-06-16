@@ -1,0 +1,3 @@
+/home/riccardo/various_implementations/build/CMakeFiles/app.dir
+/home/riccardo/various_implementations/build/CMakeFiles/edit_cache.dir
+/home/riccardo/various_implementations/build/CMakeFiles/rebuild_cache.dir
