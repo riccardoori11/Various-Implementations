@@ -68,28 +68,6 @@ template<typename T1>
 bool operator==(ricc::unique_ptr<T1>&x, std::nullptr_t p){
 		return x.get() == p;
 }
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
