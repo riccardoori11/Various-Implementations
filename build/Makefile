@@ -124,41 +124,78 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named app
+# Target rules for targets named unique_ptr
 
 # Build rule for target.
-app: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 app
-.PHONY : app
+unique_ptr: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 unique_ptr
+.PHONY : unique_ptr
 
 # fast build rule for target.
-app/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/build
-.PHONY : app/fast
+unique_ptr/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/build
+.PHONY : unique_ptr/fast
 
-main.o: main.cpp.o
-.PHONY : main.o
+#=============================================================================
+# Target rules for targets named vector
+
+# Build rule for target.
+vector: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 vector
+.PHONY : vector
+
+# fast build rule for target.
+vector/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/build
+.PHONY : vector/fast
+
+unique_ptr_tests.o: unique_ptr_tests.cpp.o
+.PHONY : unique_ptr_tests.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/main.cpp.o
-.PHONY : main.cpp.o
+unique_ptr_tests.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o
+.PHONY : unique_ptr_tests.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+unique_ptr_tests.i: unique_ptr_tests.cpp.i
+.PHONY : unique_ptr_tests.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/main.cpp.i
-.PHONY : main.cpp.i
+unique_ptr_tests.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.i
+.PHONY : unique_ptr_tests.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+unique_ptr_tests.s: unique_ptr_tests.cpp.s
+.PHONY : unique_ptr_tests.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/main.cpp.s
-.PHONY : main.cpp.s
+unique_ptr_tests.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.s
+.PHONY : unique_ptr_tests.cpp.s
+
+vector.o: vector.cpp.o
+.PHONY : vector.o
+
+# target to build an object file
+vector.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/vector.cpp.o
+.PHONY : vector.cpp.o
+
+vector.i: vector.cpp.i
+.PHONY : vector.i
+
+# target to preprocess a source file
+vector.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/vector.cpp.i
+.PHONY : vector.cpp.i
+
+vector.s: vector.cpp.s
+.PHONY : vector.s
+
+# target to generate assembly for a file
+vector.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/vector.cpp.s
+.PHONY : vector.cpp.s
 
 # Help Target
 help:
@@ -169,10 +206,14 @@ help:
 	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... app"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... unique_ptr"
+	@echo "... vector"
+	@echo "... unique_ptr_tests.o"
+	@echo "... unique_ptr_tests.i"
+	@echo "... unique_ptr_tests.s"
+	@echo "... vector.o"
+	@echo "... vector.i"
+	@echo "... vector.s"
 .PHONY : help
 
 

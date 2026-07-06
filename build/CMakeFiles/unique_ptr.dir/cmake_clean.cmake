@@ -1,0 +1,12 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/unique_ptr.dir/link.d"
+  "CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o"
+  "CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o.d"
+  "unique_ptr"
+  "unique_ptr.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/unique_ptr.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

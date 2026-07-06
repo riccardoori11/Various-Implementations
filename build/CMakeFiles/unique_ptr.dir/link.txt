@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/unique_ptr.dir/link.d CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o -o unique_ptr
