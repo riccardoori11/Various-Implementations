@@ -16,19 +16,12 @@ target_compile_features(implementation
         cxx_std_20
 )
 
-add_executable(unique_ptr
-   unique_ptr_tests.cpp
 
-)
 add_executable(vector
   vector.cpp 
 
 )
 
-target_link_libraries(unique_ptr
-    PRIVATE
-        implementation
-)
 target_link_libraries(vector
     PRIVATE
         implementation
