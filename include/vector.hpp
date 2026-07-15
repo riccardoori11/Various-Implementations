@@ -52,7 +52,7 @@ constexpr Vector():data_{nullptr}, size_{},capacity_{}
 }
 
 // copy constructor
-Vector(const Vector& other):size_{}, capacity_{other.capacity_}
+constexpr Vector(const Vector& other):size_{}, capacity_{other.capacity_}
 {
 		
 		// raw memory
@@ -65,15 +65,14 @@ Vector(const Vector& other):size_{}, capacity_{other.capacity_}
 
 }
 // copy assignment
-Vector& operator= (const Vector& other){
+constexpr Vector& operator= (const Vector& other){
 
 		T* new_data{static_cast<T*>(::operator new(sizeof(T) * other.capacity_))};
 		std::size_t new_size{};
 		
 		for (; new_size < other.size_; ++new_size){
 
-				std::construct_at(new_data + new_size, other.data_[size_]);
-		}
+				std::construct_at(new_data + new_size, other.data_[size_]); }
 
 		// delete the obejcts that live inside
 		for (std::size_t i{}; i < size_; ++i){
@@ -89,13 +88,13 @@ Vector& operator= (const Vector& other){
 }
 
 // move constructor
-Vector(Vector && other) noexcept: 
+constexpr Vector(Vector && other) noexcept: 
 		data_{std::exchange(other.data_,nullptr)}, size_{std::exchange(other.size_,0)},capacity_{std::exchange(other.capacity_,0)}  
 {
 }
 
 // move assignment
-Vector& operator=(Vector&& other) noexcept
+constexpr Vector& operator=(Vector&& other) noexcept
 {
 		std::swap(data_,other.data_);
 		std::swap(size_,other.size_);
@@ -105,7 +104,7 @@ Vector& operator=(Vector&& other) noexcept
 }
 
 // move the old elements into the new storage
-void reserve(std::size_t new_capacity){
+constexpr void reserve(std::size_t new_capacity){
 
 		T* new_data = static_cast<T*>(::operator new(sizeof(T) * new_capacity));
 
@@ -124,7 +123,7 @@ void reserve(std::size_t new_capacity){
 }
 
 
-void push_back(T value){
+constexpr void push_back(T value){
 
 		if (size_ == capacity_){
 
