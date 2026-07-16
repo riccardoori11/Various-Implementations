@@ -15,7 +15,6 @@ struct Tracker{
 
 		// copy constructor
 		Tracker(const Tracker& other){
-
 				std::cout << "TRACKER COPIED!" << std::endl;
 		}
 		Tracker(Tracker&& other){
@@ -32,15 +31,14 @@ class Vector{
 
 private:
 
-T* data_; 
-std::size_t size_;
-std::size_t capacity_;
+T* data_{nullptr}; 
+std::size_t size_{};
+std::size_t capacity_{};
+constexpr static int growth_factor{4};
 
 public:
 
-constexpr Vector():data_{nullptr}, size_{},capacity_{}
-{
-}
+constexpr Vector() = default;
 
 ~Vector(){
 		
@@ -103,20 +101,27 @@ constexpr Vector& operator=(Vector&& other) noexcept
 
 }
 
-// move the old elements into the new storage
+//copies the old elements into the new storage
+// using this as temporary helper allocate function
 constexpr void reserve(std::size_t new_capacity){
 
-		T* new_data = static_cast<T*>(::operator new(sizeof(T) * new_capacity));
+		T* new_data {static_cast<T*>(::operator new(sizeof(T) * new_capacity))};
+		std::size_t location{};
 
+		try{
 
-		for (std::size_t i{}; i < size_ ; ++i){
-				std::construct_at(new_data + i, std::move(data_[i]));
+				for (;location < size_; ++location){
+						std::construct_at(new_data + location
+						, std::move_if_noexcept(data_[location])
+						);
+				}
 		}
-
-		for (std::size_t i{}; i < size_; ++i){
-				std::destroy_at(data_ + i);
+		catch(...){
+				std::destroy_n(new_data,location);
+				::operator delete(new_data);
+				throw;
 		}
-
+		std::destroy_n(data_,size_);
 		::operator delete(data_);
 		data_ = new_data;
 		capacity_ = new_capacity;
@@ -127,10 +132,10 @@ constexpr void push_back(T value){
 
 		if (size_ == capacity_){
 
-				int new_capacity = (size_ == 0) ? 1: capacity_*2;
+				int new_capacity = (size_ == 0) ? 1: capacity_*growth_factor;
 				reserve(new_capacity);
 		}
-		std::construct_at(data_ + size_,value);
+		std::construct_at(data_ + size_,std::move(value));
 		++size_;
 }
 
@@ -152,6 +157,39 @@ constexpr bool empty() const{
 
 		return size_ == 0;
 }
+
+constexpr T*  begin (){
+
+		return data_; 
+}
+
+constexpr T* end(){
+
+		return data_ + size_;
+}
+
+constexpr void pop_back(){
+
+		if (this->empty()){
+
+				return;
+		}
+		--size_;
+}
+
+constexpr void shrink_to_fit(){
+
+
+		if (capacity_ == size_){
+
+				return;
+		}
+
+		reserve(size_);
+
+
+}
+
 
 };
 }

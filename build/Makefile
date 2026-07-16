@@ -124,19 +124,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named unique_ptr
-
-# Build rule for target.
-unique_ptr: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 unique_ptr
-.PHONY : unique_ptr
-
-# fast build rule for target.
-unique_ptr/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/build
-.PHONY : unique_ptr/fast
-
-#=============================================================================
 # Target rules for targets named vector
 
 # Build rule for target.
@@ -148,30 +135,6 @@ vector: cmake_check_build_system
 vector/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/build
 .PHONY : vector/fast
-
-unique_ptr_tests.o: unique_ptr_tests.cpp.o
-.PHONY : unique_ptr_tests.o
-
-# target to build an object file
-unique_ptr_tests.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o
-.PHONY : unique_ptr_tests.cpp.o
-
-unique_ptr_tests.i: unique_ptr_tests.cpp.i
-.PHONY : unique_ptr_tests.i
-
-# target to preprocess a source file
-unique_ptr_tests.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.i
-.PHONY : unique_ptr_tests.cpp.i
-
-unique_ptr_tests.s: unique_ptr_tests.cpp.s
-.PHONY : unique_ptr_tests.s
-
-# target to generate assembly for a file
-unique_ptr_tests.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.s
-.PHONY : unique_ptr_tests.cpp.s
 
 vector.o: vector.cpp.o
 .PHONY : vector.o
@@ -206,11 +169,7 @@ help:
 	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... unique_ptr"
 	@echo "... vector"
-	@echo "... unique_ptr_tests.o"
-	@echo "... unique_ptr_tests.i"
-	@echo "... unique_ptr_tests.s"
 	@echo "... vector.o"
 	@echo "... vector.i"
 	@echo "... vector.s"

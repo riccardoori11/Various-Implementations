@@ -30,13 +30,9 @@ int main(){
 
 
 		ricc::Vector<ricc::Tracker> a;
-		
-		a.push_back(ricc::Tracker{1});
-		a.push_back(ricc::Tracker{2});
-		
-		std::cout << "After reserve" << std::endl;
-		a.reserve(100);
+		ricc::Tracker a2(4);
 
+		a.push_back(std::move(a2));
 
 		return 0;
 
