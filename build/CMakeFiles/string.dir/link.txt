@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/string.dir/link.d CMakeFiles/string.dir/string.cpp.o -o string

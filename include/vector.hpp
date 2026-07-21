@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <new>
+#include <stdexcept>
 #include <utility>
 
 namespace ricc{
@@ -49,6 +50,7 @@ constexpr Vector() = default;
 		::operator delete(data_);
 }
 
+
 // copy constructor
 constexpr Vector(const Vector& other):size_{}, capacity_{other.capacity_}
 {
@@ -59,9 +61,9 @@ constexpr Vector(const Vector& other):size_{}, capacity_{other.capacity_}
 
 				std::construct_at(data_ + size_,other.data_[size_]);
 		}
-		
 
 }
+
 // copy assignment
 constexpr Vector& operator= (const Vector& other){
 
@@ -163,7 +165,17 @@ constexpr T*  begin (){
 		return data_; 
 }
 
+constexpr const T*  cbegin (){
+
+		return data_; 
+}
+
 constexpr T* end(){
+
+		return data_ + size_;
+}
+
+constexpr const T*  cend(){
 
 		return data_ + size_;
 }
@@ -190,6 +202,25 @@ constexpr void shrink_to_fit(){
 
 }
 
+constexpr T& at(std::size_t pos){
+
+		if (pos >= size_){
+
+				throw std::out_of_range("Position not valid");
+		}
+
+		return data_[pos];
+}
+
+constexpr const T& at(std::size_t pos) const{
+
+		if (pos >= size_){
+
+				throw std::out_of_range("Position not valid");
+		}
+
+		return data_[pos];
+}
 
 };
 }

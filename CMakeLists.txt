@@ -22,6 +22,16 @@ add_executable(vector
 
 )
 
+add_executable(string
+  string.cpp 
+
+)
+
+target_link_libraries(string
+    PRIVATE
+        implementation
+)
+
 target_link_libraries(vector
     PRIVATE
         implementation

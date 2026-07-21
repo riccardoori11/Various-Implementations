@@ -28,11 +28,15 @@ auto printVectorString(const ricc::Vector<std::string>&  x){
 
 int main(){
 
+		ricc::Vector<int> a;
+		a.push_back(1);
+		a.push_back(4);
+		a.push_back(2);
+		a.push_back(5);
 
-		ricc::Vector<ricc::Tracker> a;
-		ricc::Tracker a2(4);
+		std::cout << a.at(3) << std::endl;
 
-		a.push_back(std::move(a2));
+
 
 		return 0;
 

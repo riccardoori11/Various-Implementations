@@ -136,6 +136,43 @@ vector/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/build
 .PHONY : vector/fast
 
+#=============================================================================
+# Target rules for targets named string
+
+# Build rule for target.
+string: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 string
+.PHONY : string
+
+# fast build rule for target.
+string/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/build
+.PHONY : string/fast
+
+string.o: string.cpp.o
+.PHONY : string.o
+
+# target to build an object file
+string.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/string.cpp.o
+.PHONY : string.cpp.o
+
+string.i: string.cpp.i
+.PHONY : string.i
+
+# target to preprocess a source file
+string.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/string.cpp.i
+.PHONY : string.cpp.i
+
+string.s: string.cpp.s
+.PHONY : string.s
+
+# target to generate assembly for a file
+string.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/string.cpp.s
+.PHONY : string.cpp.s
+
 vector.o: vector.cpp.o
 .PHONY : vector.o
 
@@ -169,7 +206,11 @@ help:
 	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... string"
 	@echo "... vector"
+	@echo "... string.o"
+	@echo "... string.i"
+	@echo "... string.s"
 	@echo "... vector.o"
 	@echo "... vector.i"
 	@echo "... vector.s"

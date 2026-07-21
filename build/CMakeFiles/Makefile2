@@ -64,10 +64,12 @@ CMAKE_BINARY_DIR = /home/riccardo/various_implementations/build
 
 # The main recursive "all" target.
 all: CMakeFiles/vector.dir/all
+all: CMakeFiles/string.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
 codegen: CMakeFiles/vector.dir/codegen
+codegen: CMakeFiles/string.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -76,6 +78,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/vector.dir/clean
+clean: CMakeFiles/string.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -85,7 +88,7 @@ clean: CMakeFiles/vector.dir/clean
 CMakeFiles/vector.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=1,2 "Built target vector"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=3,4 "Built target vector"
 .PHONY : CMakeFiles/vector.dir/all
 
 # Build rule for subdir invocation for target.
@@ -102,13 +105,45 @@ vector: CMakeFiles/vector.dir/rule
 # codegen rule for target.
 CMakeFiles/vector.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=1,2 "Finished codegen for target vector"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=3,4 "Finished codegen for target vector"
 .PHONY : CMakeFiles/vector.dir/codegen
 
 # clean rule for target.
 CMakeFiles/vector.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/clean
 .PHONY : CMakeFiles/vector.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/string.dir
+
+# All Build rule for target.
+CMakeFiles/string.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=1,2 "Built target string"
+.PHONY : CMakeFiles/string.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/string.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riccardo/various_implementations/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/string.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riccardo/various_implementations/build/CMakeFiles 0
+.PHONY : CMakeFiles/string.dir/rule
+
+# Convenience name for target.
+string: CMakeFiles/string.dir/rule
+.PHONY : string
+
+# codegen rule for target.
+CMakeFiles/string.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=1,2 "Finished codegen for target string"
+.PHONY : CMakeFiles/string.dir/codegen
+
+# clean rule for target.
+CMakeFiles/string.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/clean
+.PHONY : CMakeFiles/string.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
