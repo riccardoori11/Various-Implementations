@@ -29,14 +29,8 @@ auto printVectorString(const ricc::Vector<std::string>&  x){
 int main(){
 
 		ricc::Vector<int> a;
-		a.push_back(1);
-		a.push_back(4);
-		a.push_back(2);
-		a.push_back(5);
-
-		std::cout << a.at(3) << std::endl;
-
-
+		ricc::Vector<int>b (std::move(a));
+		b = std::move(a);
 
 		return 0;
 

@@ -61,6 +61,7 @@ constexpr Vector(const Vector& other):size_{}, capacity_{other.capacity_}
 
 				std::construct_at(data_ + size_,other.data_[size_]);
 		}
+		std::cout << "Copy constructor " << std::endl;
 
 }
 
@@ -84,6 +85,7 @@ constexpr Vector& operator= (const Vector& other){
 		data_ = new_data;
 		size_ = new_size;
 		capacity_ = other.capacity_;
+		std::cout << "copy assingment" << std::endl;
 		return *this;
 }
 
@@ -91,6 +93,7 @@ constexpr Vector& operator= (const Vector& other){
 constexpr Vector(Vector && other) noexcept: 
 		data_{std::exchange(other.data_,nullptr)}, size_{std::exchange(other.size_,0)},capacity_{std::exchange(other.capacity_,0)}  
 {
+		std::cout << "Move constructor" << std::endl;
 }
 
 // move assignment
@@ -99,6 +102,7 @@ constexpr Vector& operator=(Vector&& other) noexcept
 		std::swap(data_,other.data_);
 		std::swap(size_,other.size_);
 		std::swap(capacity_,other.capacity_);
+		std::cout << "Move assingment" << std::endl;
 		return *this;
 
 }
