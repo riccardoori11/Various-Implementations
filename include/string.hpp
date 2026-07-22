@@ -2,14 +2,11 @@
 #include <cstring>
 #include <memory>
 #include <new>
+#include <utility>
 
 /*
  * sizeof(std::string) gives me 32 bytes
  * */
-
-
-
-
 
 namespace ricc{
 
@@ -38,10 +35,7 @@ private:
 
 				return (is_short() ? &data_.buffer[0]: data_.large.ptr);
 		}
-		const char* data() const{
 
-				return (is_short() ? &data_.buffer[0]: data_.large.ptr);
-		}
 
 public:
 
@@ -62,6 +56,10 @@ public:
 						data_.large.ptr = static_cast<char*>(::operator new(data_.large.capacity +1));
 						std::memcpy(data_.large.ptr,other,size_+1);
 				}
+		}
+		const char* data() const{
+
+				return (is_short() ? &data_.buffer[0]: data_.large.ptr);
 		}
 
 		// copy constructor
@@ -89,27 +87,43 @@ public:
 
 		}
 
+/*lets say *this is a short and other is a large  or *this is a large and other is a short */
 		// copy assignment
 		String& operator= (const String& other){
+
 				if (this != &other){
 						if (other.is_short()){
-								for (; size_ < other.size_ ; ++size_){
 
-										data_.buffer[size_] = other[size_];
+								if (!is_short()){
+
+										::operator delete(data_.large.ptr);
 								}
-								data_.buffer[size_] = '\0';
+								for (std::size_t i{}; i<= other.size_; i++){
+
+										data_.buffer[i] = other.data_.buffer[i];
+								}
+								size_ = other.size_;
 						}
 						else{
 
-								data_.large.ptr = static_cast<char*>(::operator new(data_.large.capacity +1));
-								for (; size_ < other.size_; ++size_){
+								char* new_ptr = static_cast<char*>(::operator new(other.data_.large.capacity+1));
+								for (std::size_t i{}; i <= other.size_; ++i){
 
-										std::construct_at(data_.large.ptr + size_, other.data_.buffer[size_]);
+										std::construct_at(new_ptr + i, other.data_.large.ptr[i]);
 								}
-								data_.large.ptr[size_] = '\0';
-						}
+								if (!is_short()){
 
+										::operator delete(data_.large.ptr);
+								}
+								data_.large.ptr = new_ptr;
+								data_.large.capacity = other.data_.large.capacity;
+								size_ = other.size_;
+								
+						}
 				}
+
+
+
 				std::cout << "COPY ASSIGNMENT" << std::endl;
 				return *this;
 				
@@ -120,12 +134,17 @@ public:
 
 				if (other.is_short()){
 
-						std::swap(data_.buffer,other.data_.buffer);
+						for (std::size_t i{}; i <= size_; ++i){
+								data_.buffer[i] = other.data_.buffer[i];
+						}
 				}
 				else{
+						data_.large.ptr = std::exchange(other.data_.large.ptr, nullptr);
+						data_.large.capacity = std::exchange(other.data_.large.capacity,0);
 
-						std::swap(data_.large.ptr,other.data_.large.ptr);
 				}
+				other.data_.buffer[0] = '\0';
+				other.size_ = 0;
 				std::cout << "Move constructor" << std::endl;
 		}
 
@@ -133,15 +152,30 @@ public:
 		String& operator = (String && other) noexcept{
 
 				if (this != &other){
+						if (!is_short()){
+
+								::operator delete(data_.large.ptr);
+								data_.large.capacity = 0;
+						}
 						size_ = other.size_;
 						if (other.is_short()){
-								std::swap(data_.buffer, other.data_.buffer);
+
+								for (std::size_t i{}; i <= other.size_; ++i){
+
+										data_.buffer[i] = other.data_.buffer[i];
+								}
+								
+								other.data_.buffer[0] = '\0';
 						}
 						else{
-								std::swap(data_.large.ptr,other.data_.large.ptr);
+								
+								data_.large.ptr = other.data_.large.ptr;
+								data_.large.capacity = other.data_.large.capacity;
+								other.data_.large.ptr = nullptr;
+								other.data_.large.capacity = 0;
 						}
 				}
-
+				other.size_ = 0;
 				std::cout << "MOVE ASSIGNMENT" << std::endl;
 				return *this;
 		};
@@ -166,9 +200,6 @@ public:
 
 				std::cout << data() << std::endl;
 		}
-
-
-
 };
 
 

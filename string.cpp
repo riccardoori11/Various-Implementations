@@ -5,16 +5,19 @@
 int main(){
 
 		
-		ricc::String a("Hello!");
-		ricc::String b("1234567890123456789012345678901234567890");
+		ricc::String a("Hello!12ewu18ur2098328t923");
+		ricc::String b("hi913120rui2390uj3gj3r08ug903u03490ug0934u");
 
-		ricc::String c(a);
-		ricc::String d;
-		d = std::move(c);
-		d.print();
-		d = std::move(b);
-		d.print();
+		a = b;
+		a.print();
 
+		std::cout << a.size() << std::endl;
+		std::cout << b.size() << std::endl;
+		
+		b.print();
+
+
+		
 
 		return 0;
 }
