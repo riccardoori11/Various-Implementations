@@ -2,11 +2,12 @@
 #include <cstring>
 #include <memory>
 #include <new>
+#include <stdexcept>
 #include <utility>
 
-/*
- * sizeof(std::string) gives me 32 bytes
- * */
+	/*
+		 * sizeof(std::string) gives me 32 bytes
+		 * */
 
 namespace ricc{
 
@@ -14,6 +15,7 @@ class String{
 
 private:
 		static constexpr std::size_t MAX{23};
+		static constexpr std::size_t gf = 2;
 
 		union{
 				char buffer[MAX +1];
@@ -31,9 +33,31 @@ private:
 				return size_ <= MAX;
 		}
 
+		std::size_t get_short_capacity(){
+
+				return MAX;
+
+		}
+
+		std::size_t get_long_capacity(){
+
+				return data_.large.capacity;
+		}
+
 		char* data(){
 
 				return (is_short() ? &data_.buffer[0]: data_.large.ptr);
+		}
+
+		void resize(std::size_t new_capacity){
+
+				char* new_ptr = static_cast<char*>(::operator new(new_capacity+1));
+				for (std::size_t i{}; i <= size_ ; ++i){
+						std::construct_at(new_ptr + i, data_.large.ptr[i]);
+				}
+				::operator delete(data_.large.ptr);
+				data_.large.ptr = new_ptr;
+				data_.large.capacity = new_capacity;
 		}
 
 
@@ -193,6 +217,70 @@ public:
 		const char& operator[](std::size_t index) const{
 				const char* loc = data();
 				return loc[index];
+
+		}
+
+		std::size_t get_capactiy(){
+
+				if (is_short()){
+
+						return get_short_capacity();
+						
+				}
+				return get_long_capacity();
+				
+
+		}
+
+		void reserve(std::size_t new_capacity){
+
+				if (new_capacity <= data_.large.capacity){
+
+						throw std::logic_error("new capacity cannot be smaller than current capacity");
+				}
+				resize(new_capacity);
+		}
+
+		void push_back(char c){
+
+				if (is_short()){
+
+						if (size_ == 23){
+								std::size_t new_cap = MAX*gf;
+
+								char* new_ptr = static_cast<char*>(::operator new(sizeof(new_cap+1)));
+								for (std::size_t i{}; i < size_; ++i){
+
+										std::construct_at(new_ptr +i, data_.buffer[i]);
+								}
+								std::construct_at(new_ptr + size_, c);
+								data_.large.capacity = new_cap;
+								data_.large.ptr = new_ptr;
+								size_++;
+								std::construct_at(new_ptr + size_, '\0');
+						}
+						else{
+								data_.buffer[size_] = c;
+								size_++;
+						}
+				}
+				else{
+
+						if (size_ == data_.large.capacity){
+
+								std::size_t new_cap = data_.large.capacity * gf;
+								reserve(new_cap);
+								std::construct_at(data_.large.ptr + size_,c);
+								size_++;
+								std::construct_at(data_.large.ptr + size_,'\0');
+						}
+						else{
+								std::construct_at(data_.large.ptr + size_,c);
+								size_++;
+								std::construct_at(data_.large.ptr + size_,'\0');
+						}
+				}
+				
 
 		}
 
