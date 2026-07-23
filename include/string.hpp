@@ -284,6 +284,27 @@ public:
 
 		}
 
+		void assign(std::size_t size, char c){
+
+				if (size < MAX){
+
+						for (std::size_t i{}; i < size; ++i){
+
+								data_.buffer[i] = c;
+						}
+						data_.buffer[size] = '\0';
+				}
+				else{
+
+						for (std::size_t i{}; i < size; ++i){
+
+								std::construct_at(data_.large.ptr + i, c);
+						}
+						std::construct_at(data_.large.ptr + size, '\0');
+				}
+				size_ = size;
+		}
+
 		void print(){
 
 				std::cout << data() << std::endl;
