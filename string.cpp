@@ -9,5 +9,7 @@ int main(){
 
 		a.print();
 
+		std::cout << sizeof(a) << std::endl;
+
 		return 0;
 }

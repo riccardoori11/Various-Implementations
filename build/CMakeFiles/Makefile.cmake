@@ -49,4 +49,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/vector.dir/DependInfo.cmake"
   "CMakeFiles/string.dir/DependInfo.cmake"
+  "CMakeFiles/move.dir/DependInfo.cmake"
   )

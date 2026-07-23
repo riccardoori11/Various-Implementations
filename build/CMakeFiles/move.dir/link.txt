@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/move.dir/link.d CMakeFiles/move.dir/move.cpp.o -o move

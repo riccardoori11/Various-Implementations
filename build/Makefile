@@ -149,6 +149,43 @@ string/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/build
 .PHONY : string/fast
 
+#=============================================================================
+# Target rules for targets named move
+
+# Build rule for target.
+move: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 move
+.PHONY : move
+
+# fast build rule for target.
+move/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/move.dir/build.make CMakeFiles/move.dir/build
+.PHONY : move/fast
+
+move.o: move.cpp.o
+.PHONY : move.o
+
+# target to build an object file
+move.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/move.dir/build.make CMakeFiles/move.dir/move.cpp.o
+.PHONY : move.cpp.o
+
+move.i: move.cpp.i
+.PHONY : move.i
+
+# target to preprocess a source file
+move.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/move.dir/build.make CMakeFiles/move.dir/move.cpp.i
+.PHONY : move.cpp.i
+
+move.s: move.cpp.s
+.PHONY : move.s
+
+# target to generate assembly for a file
+move.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/move.dir/build.make CMakeFiles/move.dir/move.cpp.s
+.PHONY : move.cpp.s
+
 string.o: string.cpp.o
 .PHONY : string.o
 
@@ -206,8 +243,12 @@ help:
 	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... move"
 	@echo "... string"
 	@echo "... vector"
+	@echo "... move.o"
+	@echo "... move.i"
+	@echo "... move.s"
 	@echo "... string.o"
 	@echo "... string.i"
 	@echo "... string.s"

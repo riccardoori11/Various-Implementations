@@ -27,6 +27,16 @@ add_executable(string
 
 )
 
+add_executable(move
+  move.cpp 
+
+)
+
+target_link_libraries(move
+    PRIVATE
+        implementation
+)
+
 target_link_libraries(string
     PRIVATE
         implementation
