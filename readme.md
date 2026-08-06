@@ -6,3 +6,8 @@ broadly speaking, small string optimization is the practice in which you seperat
 In addition to that, using a pointer to follow the character may bring additional performance overhead due to certain cache/locality cost
 
 
+Debugging with gdb
+g++ -std=c++20 -g -O0 -Wall -Wextra -Wpedantic \
+    -fsanitize=address,undefined main.cpp -o unique_ptr
+
+

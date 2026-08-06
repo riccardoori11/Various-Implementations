@@ -72,28 +72,28 @@ include CMakeFiles/unique_ptr.dir/flags.make
 CMakeFiles/unique_ptr.dir/codegen:
 .PHONY : CMakeFiles/unique_ptr.dir/codegen
 
-CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o: CMakeFiles/unique_ptr.dir/flags.make
-CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o: /home/riccardo/various_implementations/unique_ptr_tests.cpp
-CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o: CMakeFiles/unique_ptr.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o -MF CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o.d -o CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o -c /home/riccardo/various_implementations/unique_ptr_tests.cpp
+CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o: CMakeFiles/unique_ptr.dir/flags.make
+CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o: /home/riccardo/various_implementations/unique_ptr.cpp
+CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o: CMakeFiles/unique_ptr.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o -MF CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o.d -o CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o -c /home/riccardo/various_implementations/unique_ptr.cpp
 
-CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riccardo/various_implementations/unique_ptr_tests.cpp > CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.i
+CMakeFiles/unique_ptr.dir/unique_ptr.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/unique_ptr.dir/unique_ptr.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/riccardo/various_implementations/unique_ptr.cpp > CMakeFiles/unique_ptr.dir/unique_ptr.cpp.i
 
-CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riccardo/various_implementations/unique_ptr_tests.cpp -o CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.s
+CMakeFiles/unique_ptr.dir/unique_ptr.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/unique_ptr.dir/unique_ptr.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/riccardo/various_implementations/unique_ptr.cpp -o CMakeFiles/unique_ptr.dir/unique_ptr.cpp.s
 
 # Object files for target unique_ptr
 unique_ptr_OBJECTS = \
-"CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o"
+"CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o"
 
 # External object files for target unique_ptr
 unique_ptr_EXTERNAL_OBJECTS =
 
-unique_ptr: CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o
+unique_ptr: CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o
 unique_ptr: CMakeFiles/unique_ptr.dir/build.make
 unique_ptr: CMakeFiles/unique_ptr.dir/compiler_depend.ts
 unique_ptr: CMakeFiles/unique_ptr.dir/link.txt

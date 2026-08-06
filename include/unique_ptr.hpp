@@ -1,3 +1,5 @@
+#include <new>
+#include <iostream>
 #include <utility>
 
 namespace ricc{
@@ -13,49 +15,68 @@ class unique_ptr{
 
 		public:
 
-				// constructor
-				constexpr unique_ptr() noexcept = default;
+				unique_ptr() = default;
 
-				constexpr ~unique_ptr(){
-						delete ptr;
+				unique_ptr(T* p): ptr(p)
+				{
 				}
 
 				// copy constructor
 				unique_ptr(const unique_ptr& other) = delete;
 
-				// coppy assignment
-				unique_ptr& operator= (const unique_ptr& other) = delete;
+				// copy assignment
+				unique_ptr& operator = (unique_ptr& other) = delete;
 
 				// move constructor
-				constexpr unique_ptr(unique_ptr && other) noexcept: ptr(std::exchange(other.ptr,nullptr)){
+				unique_ptr(unique_ptr&& other) {
+						std::cout << "Move constructor" << std::endl;
+						std::swap(ptr,other.ptr);
 				}
 
-				//move assignment
-				// delete other first or else memory leak
-				unique_ptr& operator = (unique_ptr&& other){
-						if (this != &other){
+				// move assignment
+				unique_ptr & operator = (unique_ptr&& other) noexcept {
+						std::cout << "Move assignment" << std::endl;
+						if (this == &other){
+
+								return (*this);
+						}
+
+						/*free ptr */
+
+						if (ptr != nullptr){
 
 								delete ptr;
-								ptr = std::exchange(other.ptr,nullptr);
 						}
+
+						ptr = std::exchange(other.ptr,nullptr);
 						return *this;
-				};
+				}
 
-				// paremeterized constructor
-				unique_ptr(T* ptr): ptr(ptr){};
+				T* release() noexcept {
+						return std::exchange(ptr,nullptr);
+				}
 
-				
+				T& operator*(){
+
+						return *ptr;
+				}
+
 				T* get(){
 						return ptr;
 				}
 
-				constexpr T* release(){
+				
+				~unique_ptr(){
 
-						st
+						if (ptr != nullptr){
+								delete ptr;
+						}
+						T* ptr = nullptr;
+						return;					
+
 				}
 
-
-
+				
 
 };
 }

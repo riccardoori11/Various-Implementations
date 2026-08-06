@@ -27,12 +27,12 @@ add_executable(string
 
 )
 
-add_executable(move
-  move.cpp 
+add_executable(unique_ptr
+  unique_ptr.cpp 
 
 )
 
-target_link_libraries(move
+target_link_libraries(unique_ptr
     PRIVATE
         implementation
 )

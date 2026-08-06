@@ -150,41 +150,17 @@ string/fast:
 .PHONY : string/fast
 
 #=============================================================================
-# Target rules for targets named move
+# Target rules for targets named unique_ptr
 
 # Build rule for target.
-move: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 move
-.PHONY : move
+unique_ptr: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 unique_ptr
+.PHONY : unique_ptr
 
 # fast build rule for target.
-move/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/move.dir/build.make CMakeFiles/move.dir/build
-.PHONY : move/fast
-
-move.o: move.cpp.o
-.PHONY : move.o
-
-# target to build an object file
-move.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/move.dir/build.make CMakeFiles/move.dir/move.cpp.o
-.PHONY : move.cpp.o
-
-move.i: move.cpp.i
-.PHONY : move.i
-
-# target to preprocess a source file
-move.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/move.dir/build.make CMakeFiles/move.dir/move.cpp.i
-.PHONY : move.cpp.i
-
-move.s: move.cpp.s
-.PHONY : move.s
-
-# target to generate assembly for a file
-move.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/move.dir/build.make CMakeFiles/move.dir/move.cpp.s
-.PHONY : move.cpp.s
+unique_ptr/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/build
+.PHONY : unique_ptr/fast
 
 string.o: string.cpp.o
 .PHONY : string.o
@@ -209,6 +185,30 @@ string.s: string.cpp.s
 string.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/string.cpp.s
 .PHONY : string.cpp.s
+
+unique_ptr.o: unique_ptr.cpp.o
+.PHONY : unique_ptr.o
+
+# target to build an object file
+unique_ptr.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o
+.PHONY : unique_ptr.cpp.o
+
+unique_ptr.i: unique_ptr.cpp.i
+.PHONY : unique_ptr.i
+
+# target to preprocess a source file
+unique_ptr.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr.cpp.i
+.PHONY : unique_ptr.cpp.i
+
+unique_ptr.s: unique_ptr.cpp.s
+.PHONY : unique_ptr.s
+
+# target to generate assembly for a file
+unique_ptr.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr.cpp.s
+.PHONY : unique_ptr.cpp.s
 
 vector.o: vector.cpp.o
 .PHONY : vector.o
@@ -243,15 +243,15 @@ help:
 	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... move"
 	@echo "... string"
+	@echo "... unique_ptr"
 	@echo "... vector"
-	@echo "... move.o"
-	@echo "... move.i"
-	@echo "... move.s"
 	@echo "... string.o"
 	@echo "... string.i"
 	@echo "... string.s"
+	@echo "... unique_ptr.o"
+	@echo "... unique_ptr.i"
+	@echo "... unique_ptr.s"
 	@echo "... vector.o"
 	@echo "... vector.i"
 	@echo "... vector.s"

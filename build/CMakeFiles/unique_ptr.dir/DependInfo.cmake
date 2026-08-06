@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/riccardo/various_implementations/unique_ptr_tests.cpp" "CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o" "gcc" "CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o.d"
+  "/home/riccardo/various_implementations/unique_ptr.cpp" "CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o" "gcc" "CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o.d"
   "" "unique_ptr" "gcc" "CMakeFiles/unique_ptr.dir/link.d"
   )
 

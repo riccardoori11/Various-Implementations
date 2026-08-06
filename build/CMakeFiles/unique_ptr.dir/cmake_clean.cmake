@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/unique_ptr.dir/link.d"
-  "CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o"
-  "CMakeFiles/unique_ptr.dir/unique_ptr_tests.cpp.o.d"
+  "CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o"
+  "CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o.d"
   "unique_ptr"
   "unique_ptr.pdb"
 )
