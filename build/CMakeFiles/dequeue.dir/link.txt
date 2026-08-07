@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/dequeue.dir/link.d CMakeFiles/dequeue.dir/dequeue.cpp.o -o dequeue

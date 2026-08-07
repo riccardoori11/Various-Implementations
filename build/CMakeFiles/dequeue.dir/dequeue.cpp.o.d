@@ -1,8 +1,8 @@
-CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o: \
- /home/riccardo/various_implementations/unique_ptr.cpp \
+CMakeFiles/dequeue.dir/dequeue.cpp.o: \
+ /home/riccardo/various_implementations/dequeue.cpp \
  /usr/include/stdc-predef.h \
- /home/riccardo/various_implementations/include/unique_ptr.hpp \
- /usr/include/c++/15/cstddef \
+ /home/riccardo/various_implementations/include/dequeue.hpp \
+ /usr/include/c++/15/iostream /usr/include/c++/15/bits/requires_hosted.h \
  /usr/include/c++/15/x86_64-redhat-linux/bits/c++config.h \
  /usr/include/bits/wordsize.h \
  /usr/include/c++/15/x86_64-redhat-linux/bits/os_defines.h \
@@ -11,28 +11,27 @@ CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o: \
  /usr/include/bits/long-double.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
  /usr/include/c++/15/x86_64-redhat-linux/bits/cpu_defines.h \
- /usr/include/c++/15/pstl/pstl_config.h \
- /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h \
- /usr/include/c++/15/bits/version.h /usr/include/c++/15/new \
- /usr/include/c++/15/bits/exception.h /usr/include/c++/15/iostream \
- /usr/include/c++/15/bits/requires_hosted.h /usr/include/c++/15/ostream \
+ /usr/include/c++/15/pstl/pstl_config.h /usr/include/c++/15/ostream \
  /usr/include/c++/15/bits/ostream.h /usr/include/c++/15/ios \
  /usr/include/c++/15/iosfwd /usr/include/c++/15/bits/stringfwd.h \
  /usr/include/c++/15/bits/memoryfwd.h /usr/include/c++/15/bits/postypes.h \
  /usr/include/c++/15/cwchar /usr/include/wchar.h \
  /usr/include/bits/libc-header-start.h /usr/include/bits/floatn.h \
  /usr/include/bits/floatn-common.h \
+ /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h \
  /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h \
  /usr/include/bits/wchar.h /usr/include/bits/types/wint_t.h \
  /usr/include/bits/types/mbstate_t.h \
  /usr/include/bits/types/__mbstate_t.h /usr/include/bits/types/__FILE.h \
  /usr/include/bits/types/FILE.h /usr/include/bits/types/locale_t.h \
  /usr/include/bits/types/__locale_t.h /usr/include/c++/15/exception \
+ /usr/include/c++/15/bits/exception.h /usr/include/c++/15/bits/version.h \
  /usr/include/c++/15/bits/exception_ptr.h \
  /usr/include/c++/15/bits/exception_defines.h \
  /usr/include/c++/15/bits/cxxabi_init_exception.h \
  /usr/include/c++/15/typeinfo /usr/include/c++/15/bits/hash_bytes.h \
- /usr/include/c++/15/bits/move.h /usr/include/c++/15/type_traits \
+ /usr/include/c++/15/new /usr/include/c++/15/bits/move.h \
+ /usr/include/c++/15/type_traits \
  /usr/include/c++/15/bits/nested_exception.h \
  /usr/include/c++/15/bits/char_traits.h /usr/include/c++/15/compare \
  /usr/include/c++/15/concepts /usr/include/c++/15/bits/stl_construct.h \
@@ -122,7 +121,7 @@ CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o: \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/bits/types/error_t.h /usr/include/c++/15/bits/charconv.h \
  /usr/include/c++/15/bits/basic_string.tcc \
- /usr/include/c++/15/bits/memory_resource.h \
+ /usr/include/c++/15/bits/memory_resource.h /usr/include/c++/15/cstddef \
  /usr/include/c++/15/bits/uses_allocator.h \
  /usr/include/c++/15/bits/uses_allocator_args.h /usr/include/c++/15/tuple \
  /usr/include/c++/15/bits/ranges_util.h \
@@ -140,7 +139,5 @@ CMakeFiles/unique_ptr.dir/unique_ptr.cpp.o: \
  /usr/include/c++/15/bits/locale_facets.tcc \
  /usr/include/c++/15/bits/basic_ios.tcc \
  /usr/include/c++/15/bits/ostream.tcc /usr/include/c++/15/istream \
- /usr/include/c++/15/bits/istream.tcc /usr/include/c++/15/optional \
- /usr/include/c++/15/bits/enable_special_members.h \
- /usr/include/c++/15/utility /usr/include/c++/15/bits/stl_relops.h \
- /usr/include/assert.h
+ /usr/include/c++/15/bits/istream.tcc /usr/include/c++/15/utility \
+ /usr/include/c++/15/bits/stl_relops.h /usr/include/c++/15/charconv

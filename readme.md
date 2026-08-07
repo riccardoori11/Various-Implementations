@@ -11,3 +11,9 @@ g++ -std=c++20 -g -O0 -Wall -Wextra -Wpedantic \
     -fsanitize=address,undefined main.cpp -o unique_ptr
 
 
+Dequeue
+As opposed to std::vector, the elements of a deque are not stored contiguously: typical implementations use a sequence of individually allocated fixed-size arrays, with additional bookkeeping, which means indexed access to deque must perform two pointer dereferences, compared to vector's indexed access which performs only one.
+
+Has higher minimal memory cost than a vector 
+
+

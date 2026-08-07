@@ -32,6 +32,15 @@ add_executable(unique_ptr
 
 )
 
+add_executable(dequeue
+  dequeue.cpp 
+
+)
+target_link_libraries(dequeue
+    PRIVATE
+        implementation
+)
+
 target_link_libraries(unique_ptr
     PRIVATE
         implementation

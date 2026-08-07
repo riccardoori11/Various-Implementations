@@ -1,19 +1,23 @@
 #include "unique_ptr.hpp"
+#include <assert.h>
 #include <iostream>
 
 int main(){
 
 		ricc::unique_ptr<int> h(new int(10));
 
-		std::cout << *h << std::endl;
+		assert(*h == 10);
 
 		ricc::unique_ptr<int> p(std::move(h));
 
-		std::cout << *p << std::endl;
+		assert(*p == 10);
 
 		ricc::unique_ptr<int> ptr;
 		ptr = std::move(p);
-		std::cout << *ptr << std::endl;
+		assert(*ptr == 10);
 
+		ricc::unique_ptr<int> null;
+		assert(null == nullptr);
+		
 		return 0;
 }

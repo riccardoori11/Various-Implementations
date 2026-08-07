@@ -162,6 +162,43 @@ unique_ptr/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/build
 .PHONY : unique_ptr/fast
 
+#=============================================================================
+# Target rules for targets named dequeue
+
+# Build rule for target.
+dequeue: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 dequeue
+.PHONY : dequeue
+
+# fast build rule for target.
+dequeue/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dequeue.dir/build.make CMakeFiles/dequeue.dir/build
+.PHONY : dequeue/fast
+
+dequeue.o: dequeue.cpp.o
+.PHONY : dequeue.o
+
+# target to build an object file
+dequeue.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dequeue.dir/build.make CMakeFiles/dequeue.dir/dequeue.cpp.o
+.PHONY : dequeue.cpp.o
+
+dequeue.i: dequeue.cpp.i
+.PHONY : dequeue.i
+
+# target to preprocess a source file
+dequeue.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dequeue.dir/build.make CMakeFiles/dequeue.dir/dequeue.cpp.i
+.PHONY : dequeue.cpp.i
+
+dequeue.s: dequeue.cpp.s
+.PHONY : dequeue.s
+
+# target to generate assembly for a file
+dequeue.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dequeue.dir/build.make CMakeFiles/dequeue.dir/dequeue.cpp.s
+.PHONY : dequeue.cpp.s
+
 string.o: string.cpp.o
 .PHONY : string.o
 
@@ -243,9 +280,13 @@ help:
 	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... dequeue"
 	@echo "... string"
 	@echo "... unique_ptr"
 	@echo "... vector"
+	@echo "... dequeue.o"
+	@echo "... dequeue.i"
+	@echo "... dequeue.s"
 	@echo "... string.o"
 	@echo "... string.i"
 	@echo "... string.s"

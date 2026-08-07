@@ -50,4 +50,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/vector.dir/DependInfo.cmake"
   "CMakeFiles/string.dir/DependInfo.cmake"
   "CMakeFiles/unique_ptr.dir/DependInfo.cmake"
+  "CMakeFiles/dequeue.dir/DependInfo.cmake"
   )
