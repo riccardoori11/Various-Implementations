@@ -10,9 +10,39 @@ namespace ricc{
 /* pop right, pop left, push right, push left */
 /**/
 
+struct Tracker{
+
+		inline static std::size_t alive{};
+		inline static std::size_t constructed{};
+		inline static std::size_t destroyed{};
+
+		Tracker(){
+				++alive;
+				++constructed;
+		}
+
+		Tracker(const Tracker& other){
+
+				alive++;
+				++constructed;
+		}
+		Tracker( Tracker&& other){
+
+				alive++;
+				++constructed;
+		}
+
+		~Tracker(){
+
+				--alive;
+				++destroyed;
+		}
+
+
+};
+
 template <typename T>
 class Dequeue_fixed_size{
-
 private:
 
 static constexpr int Block_size = 4;
@@ -50,15 +80,35 @@ public:
 
 Dequeue_fixed_size() = default;
 
-/*Handle RAII later*/		
-Dequeue_fixed_size(const Dequeue_fixed_size& other) = delete; 
+~Dequeue_fixed_size(){
+/*Deconstruct elements
+ * and then deallocate raw memory
+ * however our allocator is RAII safe, thus I dont know if we necessarily need to */
+
+		for (std::size_t i{}; i < size_; ++i){
+
+				std::size_t pos = start + i;
+				auto which_block = pos / Block_size;
+				auto offset = pos % Block_size;
+
+				std::destroy_at(blocks[which_block].get() + offset);
+		}
+		
+}
+
+Dequeue_fixed_size(const Dequeue_fixed_size& other){
+
+
+
+} 
+
 Dequeue_fixed_size( Dequeue_fixed_size&& other) = delete;
 
 Dequeue_fixed_size& operator= (const Dequeue_fixed_size& other) = delete;
 Dequeue_fixed_size& operator= (Dequeue_fixed_size&& other) = delete;
 
 
-void pushBack(int value){
+void push_back(T&& value){
 
 		const std::size_t position = start + size_; 
 
@@ -80,12 +130,35 @@ void pushBack(int value){
 		return;
 }
 
-std::size_t size(){
+void push_front( T&& value){
+
+		if (start + size_ == capacity){
+
+				throw std::out_of_range("capacity is full");
+		}
+
+		const std::size_t pos = start-1;
+		if (blocks[pos / Block_size] == nullptr){
+
+				blocks[pos / Block_size] = allocate_block();
+		}
+		const auto offset = pos % Block_size;
+		T* destination = blocks[pos/Block_size].get() + offset;
+
+		std::construct_at(destination, value);
+
+		start = pos;
+		++size_;
+		return;
+
+}
+
+constexpr std::size_t size(){
 
 		return size_;
 }
 
-T& at(std::size_t idx){
+constexpr T& at(std::size_t idx){
 
 		if (idx >= size_){
 
