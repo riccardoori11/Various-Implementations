@@ -96,15 +96,35 @@ Dequeue_fixed_size() = default;
 		
 }
 
-Dequeue_fixed_size(const Dequeue_fixed_size& other){
+Dequeue_fixed_size(const Dequeue_fixed_size& other):start(other.start),size_(other.size_){
 
+		std::cout << "Copy constructor" << std::endl;
 
+		for (std::size_t i{}; i < size_; ++i){
 
-} 
+				auto pos = start + i;
+				if (blocks[pos / Block_size] == nullptr){
 
-Dequeue_fixed_size( Dequeue_fixed_size&& other) = delete;
+						blocks[pos/ Block_size] = allocate_block();
+				}
+				auto offset = pos % Block_size;
 
-Dequeue_fixed_size& operator= (const Dequeue_fixed_size& other) = delete;
+				T* destination = blocks[pos / Block_size].get() + offset;
+				std::construct_at(destination, *(other.blocks[pos/ Block_size].get() + offset));
+
+		} 
+}
+
+Dequeue_fixed_size( Dequeue_fixed_size&& other):size_(std::exchange(other.size_,0)),start(std::exchange(other.start,0)){
+/*arr1.swap(arr2)*/
+
+		std::cout << "Move constructor" << std::endl;
+		other.blocks.swap(blocks);
+}
+
+Dequeue_fixed_size& operator= (const Dequeue_fixed_size& other){
+
+}
 Dequeue_fixed_size& operator= (Dequeue_fixed_size&& other) = delete;
 
 
@@ -152,6 +172,8 @@ void push_front( T&& value){
 		return;
 
 }
+
+
 
 constexpr std::size_t size(){
 
