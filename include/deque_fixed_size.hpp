@@ -10,7 +10,7 @@ namespace ricc{
 /* pop right, pop left, push right, push left */
 /**/
 
-template <class T>
+template <typename T>
 class Dequeue_fixed_size{
 
 private:
