@@ -56,4 +56,17 @@ target_link_libraries(vector
         implementation
 )
 
+# target_compile_options(implementation INTERFACE
+#-Wall
+#-Wextra
+#-Wpedantic
+#-Wconversion
+#$<$<CONFIG:Debug>:-g>
+#$<$<CONFIG:Debug>:-fsanitize=address,undefined>
+#$<$<CONFIG:Debug>:-fno-omit-frame-pointer>
+#)
+
+#target_link_options(implementation INTERFACE
+#$<$<CONFIG:Debug>:-fsanitize=address,undefined>
+#)
 

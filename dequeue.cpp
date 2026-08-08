@@ -1,15 +1,17 @@
-#include "dequeue.hpp"
 #include <charconv>
+#include <assert.h>
+#include <deque_fixed_size.hpp>
 #include <iostream>
 
 int main(){
 
+		ricc::Dequeue_fixed_size<int> a;
 
-		ricc::Dequeue<int> a;
-		ricc::Dequeue<int> b{std::move(a)};
+		a.pushBack(4);
 
+		assert(a.size() == 1);
 
+		assert(a.at(0) == 4);
 
-		return 0;
 }
 
