@@ -4,52 +4,24 @@
 #include <new>
 #include <utility>
 #include <stdexcept>
+#include <vector>
 
 namespace ricc{
 
 /* pop right, pop left, push right, push left */
 /**/
 
-struct Tracker{
-
-		inline static std::size_t alive{};
-		inline static std::size_t constructed{};
-		inline static std::size_t destroyed{};
-
-		Tracker(){
-				++alive;
-				++constructed;
-		}
-
-		Tracker(const Tracker& other){
-
-				alive++;
-				++constructed;
-		}
-		Tracker( Tracker&& other){
-
-				alive++;
-				++constructed;
-		}
-
-		~Tracker(){
-
-				--alive;
-				++destroyed;
-		}
-
-
-};
 
 template <typename T>
 class Dequeue_fixed_size{
 private:
 
 static constexpr int Block_size = 4;
-static constexpr int Map_size = 8;
+static constexpr int Initial_Map_size = 8;
+static constexpr std::size_t gf{2};
+
 
 /*For this example, it could store 32 elements*/
-static constexpr int capacity = Block_size * Map_size;
 
 struct block_deleter{
 
@@ -61,7 +33,7 @@ struct block_deleter{
 
 
 		using block_ptr = std::unique_ptr<T,block_deleter>;
-		std::array<block_ptr, Map_size> blocks{};
+		std::vector<block_ptr> blocks;
 
 		/* allocate a block */
 		block_ptr allocate_block(){
@@ -72,13 +44,51 @@ struct block_deleter{
 		}
 
 		
-		std::size_t start = capacity / 2;
+		std::size_t start = (Initial_Map_size * Block_size) / 2;
 		std::size_t size_{};
+
+		void swap(Dequeue_fixed_size& temp) noexcept{
+
+				temp.blocks.swap(blocks);
+				std::swap(start,temp.start);
+				std::swap(size_, temp.size_);
+
+		}
+
+		void growMap(){
+
+				
+
+				const auto old_map_size = blocks.size();
+
+				if (old_map_size == 0){
+
+						blocks.resize(Initial_Map_size);
+						start = (Initial_Map_size * Block_size) / 2;
+						return;
+				}
+
+				const auto new_map_size = old_map_size * gf;
+
+				const auto shift_blocks = (new_map_size +1 - old_map_size) / 2;
+
+				std::vector<block_ptr> new_blocks(new_map_size);
+
+				for (std::size_t i{}; i < old_map_size; ++i){
+
+						new_blocks[shift_blocks + i] = std::move(blocks[i]);
+				}
+
+				blocks.swap(new_blocks);
+
+				start += shift_blocks * Block_size;
+
+		}
 
 
 public:
 
-Dequeue_fixed_size() = default;
+Dequeue_fixed_size():blocks(Initial_Map_size){};
 
 ~Dequeue_fixed_size(){
 /*Deconstruct elements
@@ -96,7 +106,7 @@ Dequeue_fixed_size() = default;
 		
 }
 
-Dequeue_fixed_size(const Dequeue_fixed_size& other):start(other.start),size_(other.size_){
+Dequeue_fixed_size(const Dequeue_fixed_size& other):start(other.start),size_(other.size_),blocks(other.blocks.size()){
 
 		std::cout << "Copy constructor" << std::endl;
 
@@ -115,7 +125,7 @@ Dequeue_fixed_size(const Dequeue_fixed_size& other):start(other.start),size_(oth
 		} 
 }
 
-Dequeue_fixed_size( Dequeue_fixed_size&& other):size_(std::exchange(other.size_,0)),start(std::exchange(other.start,0)){
+Dequeue_fixed_size( Dequeue_fixed_size&& other) noexcept :size_(std::exchange(other.size_,0)),start(std::exchange(other.start,0))  {
 /*arr1.swap(arr2)*/
 
 		std::cout << "Move constructor" << std::endl;
@@ -124,19 +134,47 @@ Dequeue_fixed_size( Dequeue_fixed_size&& other):size_(std::exchange(other.size_,
 
 Dequeue_fixed_size& operator= (const Dequeue_fixed_size& other){
 
+		std::cout << "Copy assingment" << std::endl;
+
+		if (this == &other){
+				return *this;
+		}
+
+		Dequeue_fixed_size temp(other);
+
+		swap(temp);
+
+		return *this;
+
 }
-Dequeue_fixed_size& operator= (Dequeue_fixed_size&& other) = delete;
+Dequeue_fixed_size& operator= (Dequeue_fixed_size&& other) noexcept{
+
+		std::cout << "Move assignment" << std::endl;
+
+		if (this == &other){
+
+				return *this;
+		}
+
+		Dequeue_fixed_size temp(std::move(other));
+
+		swap(temp);
+
+		return *this;
+		
+
+}
 
 
 void push_back(T&& value){
 
-		const std::size_t position = start + size_; 
 
-		if (position == capacity){
+		if ((start + size_) >= (blocks.size() * Block_size)){
 
-				throw std::out_of_range("Position the same size of capacity");
+				growMap();
 		}
 
+		const std::size_t position = start + size_; 
 		if (blocks[position / Block_size] == nullptr){
 
 				blocks[position / Block_size]  = allocate_block();
@@ -152,9 +190,9 @@ void push_back(T&& value){
 
 void push_front( T&& value){
 
-		if (start + size_ == capacity){
+		if ((start + size_) >= (blocks.size() * Block_size)){
 
-				throw std::out_of_range("capacity is full");
+				growMap();
 		}
 
 		const std::size_t pos = start-1;
@@ -174,6 +212,22 @@ void push_front( T&& value){
 }
 
 
+void popBack(){
+
+		const auto pos = start + size_ - 1;
+
+		std::destroy_at(blocks[pos / Block_size].get() + (pos % Block_size));
+		--size_;
+
+}
+
+void popFront(){
+
+		const auto pos = start;
+		std::destroy_at(blocks[pos/ Block_size].get() + (pos % Block_size));
+		--size_;
+		++start;
+}
 
 constexpr std::size_t size(){
 

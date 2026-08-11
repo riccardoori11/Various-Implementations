@@ -163,6 +163,19 @@ unique_ptr/fast:
 .PHONY : unique_ptr/fast
 
 #=============================================================================
+# Target rules for targets named any
+
+# Build rule for target.
+any: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 any
+.PHONY : any
+
+# fast build rule for target.
+any/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/any.dir/build.make CMakeFiles/any.dir/build
+.PHONY : any/fast
+
+#=============================================================================
 # Target rules for targets named dequeue
 
 # Build rule for target.
@@ -174,6 +187,30 @@ dequeue: cmake_check_build_system
 dequeue/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dequeue.dir/build.make CMakeFiles/dequeue.dir/build
 .PHONY : dequeue/fast
+
+any.o: any.cpp.o
+.PHONY : any.o
+
+# target to build an object file
+any.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/any.dir/build.make CMakeFiles/any.dir/any.cpp.o
+.PHONY : any.cpp.o
+
+any.i: any.cpp.i
+.PHONY : any.i
+
+# target to preprocess a source file
+any.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/any.dir/build.make CMakeFiles/any.dir/any.cpp.i
+.PHONY : any.cpp.i
+
+any.s: any.cpp.s
+.PHONY : any.s
+
+# target to generate assembly for a file
+any.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/any.dir/build.make CMakeFiles/any.dir/any.cpp.s
+.PHONY : any.cpp.s
 
 dequeue.o: dequeue.cpp.o
 .PHONY : dequeue.o
@@ -280,10 +317,14 @@ help:
 	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... any"
 	@echo "... dequeue"
 	@echo "... string"
 	@echo "... unique_ptr"
 	@echo "... vector"
+	@echo "... any.o"
+	@echo "... any.i"
+	@echo "... any.s"
 	@echo "... dequeue.o"
 	@echo "... dequeue.i"
 	@echo "... dequeue.s"
