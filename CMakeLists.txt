@@ -37,6 +37,11 @@ add_executable(any
 
 )
 
+add_executable( function
+function.cpp
+
+)
+
 add_executable(dequeue
   dequeue.cpp 
 
@@ -46,7 +51,7 @@ target_link_libraries(dequeue
         implementation
 )
 
-target_link_libraries(any
+target_link_libraries(function
     PRIVATE
         implementation
 )
