@@ -5,28 +5,7 @@
 #include <utility>
 
 namespace ricc{
-struct Tracker{
 
-		static inline int constructed{};
-		int val{};
-		
-		Tracker(int val):val{val}{
-				++constructed;
-		}
-
-		// copy constructor
-		Tracker(const Tracker& other){
-				std::cout << "TRACKER COPIED!" << std::endl;
-		}
-		Tracker(Tracker&& other){
-
-				std::cout << "TRACKER MOVED!" << std::endl;
-		}
-
-		Tracker& operator= (const Tracker& other) = delete;
-		Tracker& operator = (Tracker&& other) = delete;
-
-};
 template <typename T>
 class Vector{
 
@@ -37,55 +16,67 @@ std::size_t size_{};
 std::size_t capacity_{};
 constexpr static int growth_factor{4};
 
+
+struct deleter_helper{
+
+		void operator()(T* ptr){
+
+				return ::operator delete(ptr,std::align_val_t(alignof(T)));
+		}
+};
+
+using vector_ptr = std::unique_ptr<T,deleter_helper>;
+
+vector_ptr allocate_helper(std::size_t new_capacity){
+		auto mem = ::operator new(sizeof(T) * new_capacity);
+		return vector_ptr(static_cast<T*>(mem));
+
+}
+
+void swap(Vector& other){
+
+		std::swap(data_,other.data_);
+		std::swap(size_,other.size_);
+		std::swap(capacity_,other.capacity_);
+}
+
 public:
 
 constexpr Vector() = default;
 
+
 ~Vector(){
 		
 		for (std::size_t i{}; i < size_; ++i){
-
 				std::destroy_at(data_ + i);
 		}
-		::operator delete(data_);
 }
 
 
 // copy constructor
-constexpr Vector(const Vector& other):size_{}, capacity_{other.capacity_}
+constexpr Vector(const Vector& other):capacity_{other.capacity_}
 {
 		
-		// raw memory
-		data_ = static_cast<T*>(::operator new(sizeof(T) * capacity_));
+		auto mem = allocate_helper(capacity_);
+		T* destination = mem.get();
 		for (; size_ < other.size_; ++size_){
-
-				std::construct_at(data_ + size_,other.data_[size_]);
+				std::construct_at(mem.get() + size_,*(other.data_ + size_));
 		}
+
+		data_ = mem.release();
 		std::cout << "Copy constructor " << std::endl;
 
 }
 
 // copy assignment
 constexpr Vector& operator= (const Vector& other){
-
-		T* new_data{static_cast<T*>(::operator new(sizeof(T) * other.capacity_))};
-		std::size_t new_size{};
-		
-		for (; new_size < other.size_; ++new_size){
-
-				std::construct_at(new_data + new_size, other.data_[size_]); }
-
-		// delete the obejcts that live inside
-		for (std::size_t i{}; i < size_; ++i){
-
-				std::destroy_at(data_+i);
+		if (this == &other){
+		return *this;
 		}
 
-		::operator delete(data_);
-		data_ = new_data;
-		size_ = new_size;
-		capacity_ = other.capacity_;
-		std::cout << "copy assingment" << std::endl;
+		Vector temp{other};
+		swap(temp);
+		std::cout << "Copy assignment" << std::endl;
 		return *this;
 }
 
@@ -99,9 +90,15 @@ constexpr Vector(Vector && other) noexcept:
 // move assignment
 constexpr Vector& operator=(Vector&& other) noexcept
 {
-		std::swap(data_,other.data_);
-		std::swap(size_,other.size_);
-		std::swap(capacity_,other.capacity_);
+
+		if (this == &other){
+
+				return *this;
+		}
+
+		Vector temp(std::move(other));
+		swap(temp);
+
 		std::cout << "Move assingment" << std::endl;
 		return *this;
 
@@ -111,38 +108,74 @@ constexpr Vector& operator=(Vector&& other) noexcept
 // using this as temporary helper allocate function
 constexpr void reserve(std::size_t new_capacity){
 
-		T* new_data {static_cast<T*>(::operator new(sizeof(T) * new_capacity))};
-		std::size_t location{};
+		if (new_capacity <= capacity_){
 
-		try{
+				throw std::bad_array_new_length();
+		}
 
-				for (;location < size_; ++location){
-						std::construct_at(new_data + location
-						, std::move_if_noexcept(data_[location])
-						);
-				}
+		auto mem = allocate_helper(new_capacity);
+
+		auto new_ptr = mem.get();
+
+		for (std::size_t i{}; i < size_; ++i){
+
+				std::construct_at(new_ptr + i,*(data_ + i));
 		}
-		catch(...){
-				std::destroy_n(new_data,location);
-				::operator delete(new_data);
-				throw;
+
+		for (std::size_t i{}; i < size_; ++i){
+
+				std::destroy_at(data_+ i);
 		}
-		std::destroy_n(data_,size_);
-		::operator delete(data_);
-		data_ = new_data;
-		capacity_ = new_capacity;
+
+		capacity_ = std::exchange(new_capacity,0);
+
+		deleter_helper{}(data_);
+
+		data_ = mem.release();
+
 }
 
 
-constexpr void push_back(T value){
+constexpr void push_back(T&& value){
 
 		if (size_ == capacity_){
 
-				int new_capacity = (size_ == 0) ? 1: capacity_*growth_factor;
+				std::size_t new_capacity = (size_ == 0) ? 1: capacity_*growth_factor;
 				reserve(new_capacity);
 		}
 		std::construct_at(data_ + size_,std::move(value));
 		++size_;
+}
+/*
+*applying move semantics, here args represents any number of forward references
+template <typename... Args>
+void emplace_back(Args&&... args){
+
+		if (size_ == capacity_){
+
+				std::size_t new_capacity = (size_ == 0) ? 1: capacity_ * growth_factor;
+				reserve(new_capacity);
+		}
+
+		T* destination = data_ + size_;
+
+		std::construct_at(destination, std::forward<Args>(args)...);
+		size_++;
+}
+*/
+template <typename... Args>
+ T& emplace_back(Args&&... args){
+
+		if (size_ == capacity_){
+
+				std::size_t new_capacity = (size_ == 0) ? 1: capacity_ * growth_factor;
+				reserve(new_capacity);
+		}
+
+		std::construct_at(data_ + size_, std::forward<Args>(args)...);
+		size_++;
+
+		return *(data_+ size_);
 }
 
 constexpr std::size_t size() const{
@@ -156,7 +189,7 @@ constexpr std::size_t capacity() const{
 }
 
 constexpr T& operator[](const std::size_t i) const{
-		return data_[i];
+		return *(data_ + i);
 }
 
 constexpr bool empty() const{
@@ -187,9 +220,9 @@ constexpr const T*  cend(){
 constexpr void pop_back(){
 
 		if (this->empty()){
-
 				return;
 		}
+		std::destroy_at(data_ + size_ - 1);
 		--size_;
 }
 
@@ -206,7 +239,7 @@ constexpr void shrink_to_fit(){
 
 }
 
-constexpr T& at(std::size_t pos){
+constexpr const T& at(const std::size_t pos) {
 
 		if (pos >= size_){
 
@@ -216,7 +249,7 @@ constexpr T& at(std::size_t pos){
 		return data_[pos];
 }
 
-constexpr const T& at(std::size_t pos) const{
+constexpr T& at(std::size_t pos) const{
 
 		if (pos >= size_){
 

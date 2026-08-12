@@ -51,7 +51,7 @@ target_link_libraries(dequeue
         implementation
 )
 
-target_link_libraries(function
+target_link_libraries(any
     PRIVATE
         implementation
 )

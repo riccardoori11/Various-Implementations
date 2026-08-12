@@ -83,8 +83,21 @@ any(T object){
 
 }
 
-};
 
+template<typename T>
+T& any_cast(){
+
+		if (!type_ || typeid(T) != *type_){
+
+				throw std::bad_cast();
+		}
+
+		using t = std::decay_t<T>;
+		return *static_cast<t*>(data_.get());
+
+}
+
+};
 
 
 }

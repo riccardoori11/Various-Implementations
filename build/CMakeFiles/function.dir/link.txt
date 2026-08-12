@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/function.dir/link.d CMakeFiles/function.dir/function.cpp.o -o function

@@ -176,6 +176,19 @@ any/fast:
 .PHONY : any/fast
 
 #=============================================================================
+# Target rules for targets named function
+
+# Build rule for target.
+function: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 function
+.PHONY : function
+
+# fast build rule for target.
+function/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/build
+.PHONY : function/fast
+
+#=============================================================================
 # Target rules for targets named dequeue
 
 # Build rule for target.
@@ -235,6 +248,30 @@ dequeue.s: dequeue.cpp.s
 dequeue.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dequeue.dir/build.make CMakeFiles/dequeue.dir/dequeue.cpp.s
 .PHONY : dequeue.cpp.s
+
+function.o: function.cpp.o
+.PHONY : function.o
+
+# target to build an object file
+function.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/function.cpp.o
+.PHONY : function.cpp.o
+
+function.i: function.cpp.i
+.PHONY : function.i
+
+# target to preprocess a source file
+function.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/function.cpp.i
+.PHONY : function.cpp.i
+
+function.s: function.cpp.s
+.PHONY : function.s
+
+# target to generate assembly for a file
+function.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/function.cpp.s
+.PHONY : function.cpp.s
 
 string.o: string.cpp.o
 .PHONY : string.o
@@ -319,6 +356,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... any"
 	@echo "... dequeue"
+	@echo "... function"
 	@echo "... string"
 	@echo "... unique_ptr"
 	@echo "... vector"
@@ -328,6 +366,9 @@ help:
 	@echo "... dequeue.o"
 	@echo "... dequeue.i"
 	@echo "... dequeue.s"
+	@echo "... function.o"
+	@echo "... function.i"
+	@echo "... function.s"
 	@echo "... string.o"
 	@echo "... string.i"
 	@echo "... string.s"

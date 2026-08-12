@@ -2,6 +2,7 @@
 /home/riccardo/various_implementations/build/CMakeFiles/string.dir
 /home/riccardo/various_implementations/build/CMakeFiles/unique_ptr.dir
 /home/riccardo/various_implementations/build/CMakeFiles/any.dir
+/home/riccardo/various_implementations/build/CMakeFiles/function.dir
 /home/riccardo/various_implementations/build/CMakeFiles/dequeue.dir
 /home/riccardo/various_implementations/build/CMakeFiles/edit_cache.dir
 /home/riccardo/various_implementations/build/CMakeFiles/rebuild_cache.dir
