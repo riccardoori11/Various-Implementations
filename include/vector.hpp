@@ -164,7 +164,7 @@ void emplace_back(Args&&... args){
 }
 */
 template <typename... Args>
- T& emplace_back(Args&&... args){
+constexpr T& emplace_back(Args&&... args){
 
 		if (size_ == capacity_){
 

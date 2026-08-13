@@ -67,6 +67,7 @@ all: CMakeFiles/vector.dir/all
 all: CMakeFiles/string.dir/all
 all: CMakeFiles/unique_ptr.dir/all
 all: CMakeFiles/any.dir/all
+all: CMakeFiles/forward_list.dir/all
 all: CMakeFiles/function.dir/all
 all: CMakeFiles/dequeue.dir/all
 .PHONY : all
@@ -76,6 +77,7 @@ codegen: CMakeFiles/vector.dir/codegen
 codegen: CMakeFiles/string.dir/codegen
 codegen: CMakeFiles/unique_ptr.dir/codegen
 codegen: CMakeFiles/any.dir/codegen
+codegen: CMakeFiles/forward_list.dir/codegen
 codegen: CMakeFiles/function.dir/codegen
 codegen: CMakeFiles/dequeue.dir/codegen
 .PHONY : codegen
@@ -89,6 +91,7 @@ clean: CMakeFiles/vector.dir/clean
 clean: CMakeFiles/string.dir/clean
 clean: CMakeFiles/unique_ptr.dir/clean
 clean: CMakeFiles/any.dir/clean
+clean: CMakeFiles/forward_list.dir/clean
 clean: CMakeFiles/function.dir/clean
 clean: CMakeFiles/dequeue.dir/clean
 .PHONY : clean
@@ -100,7 +103,7 @@ clean: CMakeFiles/dequeue.dir/clean
 CMakeFiles/vector.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=11,12 "Built target vector"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=13,14 "Built target vector"
 .PHONY : CMakeFiles/vector.dir/all
 
 # Build rule for subdir invocation for target.
@@ -117,7 +120,7 @@ vector: CMakeFiles/vector.dir/rule
 # codegen rule for target.
 CMakeFiles/vector.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=11,12 "Finished codegen for target vector"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=13,14 "Finished codegen for target vector"
 .PHONY : CMakeFiles/vector.dir/codegen
 
 # clean rule for target.
@@ -132,7 +135,7 @@ CMakeFiles/vector.dir/clean:
 CMakeFiles/string.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=7,8 "Built target string"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=9,10 "Built target string"
 .PHONY : CMakeFiles/string.dir/all
 
 # Build rule for subdir invocation for target.
@@ -149,7 +152,7 @@ string: CMakeFiles/string.dir/rule
 # codegen rule for target.
 CMakeFiles/string.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=7,8 "Finished codegen for target string"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=9,10 "Finished codegen for target string"
 .PHONY : CMakeFiles/string.dir/codegen
 
 # clean rule for target.
@@ -164,7 +167,7 @@ CMakeFiles/string.dir/clean:
 CMakeFiles/unique_ptr.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=9,10 "Built target unique_ptr"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=11,12 "Built target unique_ptr"
 .PHONY : CMakeFiles/unique_ptr.dir/all
 
 # Build rule for subdir invocation for target.
@@ -181,7 +184,7 @@ unique_ptr: CMakeFiles/unique_ptr.dir/rule
 # codegen rule for target.
 CMakeFiles/unique_ptr.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=9,10 "Finished codegen for target unique_ptr"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=11,12 "Finished codegen for target unique_ptr"
 .PHONY : CMakeFiles/unique_ptr.dir/codegen
 
 # clean rule for target.
@@ -222,13 +225,45 @@ CMakeFiles/any.dir/clean:
 .PHONY : CMakeFiles/any.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/forward_list.dir
+
+# All Build rule for target.
+CMakeFiles/forward_list.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/forward_list.dir/build.make CMakeFiles/forward_list.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/forward_list.dir/build.make CMakeFiles/forward_list.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=5,6 "Built target forward_list"
+.PHONY : CMakeFiles/forward_list.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/forward_list.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riccardo/various_implementations/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/forward_list.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riccardo/various_implementations/build/CMakeFiles 0
+.PHONY : CMakeFiles/forward_list.dir/rule
+
+# Convenience name for target.
+forward_list: CMakeFiles/forward_list.dir/rule
+.PHONY : forward_list
+
+# codegen rule for target.
+CMakeFiles/forward_list.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/forward_list.dir/build.make CMakeFiles/forward_list.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=5,6 "Finished codegen for target forward_list"
+.PHONY : CMakeFiles/forward_list.dir/codegen
+
+# clean rule for target.
+CMakeFiles/forward_list.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/forward_list.dir/build.make CMakeFiles/forward_list.dir/clean
+.PHONY : CMakeFiles/forward_list.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/function.dir
 
 # All Build rule for target.
 CMakeFiles/function.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=5,6 "Built target function"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=7,8 "Built target function"
 .PHONY : CMakeFiles/function.dir/all
 
 # Build rule for subdir invocation for target.
@@ -245,7 +280,7 @@ function: CMakeFiles/function.dir/rule
 # codegen rule for target.
 CMakeFiles/function.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=5,6 "Finished codegen for target function"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=7,8 "Finished codegen for target function"
 .PHONY : CMakeFiles/function.dir/codegen
 
 # clean rule for target.

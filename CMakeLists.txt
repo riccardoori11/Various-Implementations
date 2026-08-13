@@ -37,6 +37,11 @@ add_executable(any
 
 )
 
+add_executable( forward_list
+list.cpp
+
+)
+
 add_executable( function
 function.cpp
 
@@ -67,6 +72,11 @@ target_link_libraries(string
 )
 
 target_link_libraries(vector
+    PRIVATE
+        implementation
+)
+
+target_link_libraries(forward_list
     PRIVATE
         implementation
 )

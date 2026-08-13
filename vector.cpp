@@ -61,6 +61,7 @@ struct A{
 
 };
 
+
 int main(){
 
 		ricc::Vector<int> a{};

@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/forward_list.dir/link.d CMakeFiles/forward_list.dir/list.cpp.o -o forward_list
