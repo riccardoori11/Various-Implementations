@@ -138,6 +138,6 @@ CMakeFiles/forward_list.dir/list.cpp.o: \
  /usr/include/c++/15/bits/locale_facets.tcc \
  /usr/include/c++/15/bits/basic_ios.tcc \
  /usr/include/c++/15/bits/ostream.tcc /usr/include/c++/15/istream \
- /usr/include/c++/15/bits/istream.tcc \
+ /usr/include/c++/15/bits/istream.tcc /usr/include/assert.h \
  /home/riccardo/various_implementations/include/list.hpp \
  /usr/include/c++/15/utility /usr/include/c++/15/bits/stl_relops.h
