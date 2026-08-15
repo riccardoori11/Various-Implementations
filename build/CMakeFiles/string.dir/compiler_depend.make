@@ -90,6 +90,7 @@ CMakeFiles/string.dir/string.cpp.o: /home/riccardo/various_implementations/strin
   /usr/include/bits/wctype-wchar.h \
   /usr/include/bits/wordsize.h \
   /usr/include/bits/xopen_lim.h \
+  /usr/include/c++/15/array \
   /usr/include/c++/15/backward/auto_ptr.h \
   /usr/include/c++/15/backward/binders.h \
   /usr/include/c++/15/bit \
@@ -110,6 +111,7 @@ CMakeFiles/string.dir/string.cpp.o: /home/riccardo/various_implementations/strin
   /usr/include/c++/15/bits/cpp_type_traits.h \
   /usr/include/c++/15/bits/cxxabi_forced.h \
   /usr/include/c++/15/bits/cxxabi_init_exception.h \
+  /usr/include/c++/15/bits/enable_special_members.h \
   /usr/include/c++/15/bits/exception.h \
   /usr/include/c++/15/bits/exception_defines.h \
   /usr/include/c++/15/bits/exception_ptr.h \
@@ -128,12 +130,14 @@ CMakeFiles/string.dir/string.cpp.o: /home/riccardo/various_implementations/strin
   /usr/include/c++/15/bits/max_size_type.h \
   /usr/include/c++/15/bits/memory_resource.h \
   /usr/include/c++/15/bits/memoryfwd.h \
+  /usr/include/c++/15/bits/monostate.h \
   /usr/include/c++/15/bits/move.h \
   /usr/include/c++/15/bits/nested_exception.h \
   /usr/include/c++/15/bits/new_allocator.h \
   /usr/include/c++/15/bits/ostream.h \
   /usr/include/c++/15/bits/ostream.tcc \
   /usr/include/c++/15/bits/ostream_insert.h \
+  /usr/include/c++/15/bits/parse_numbers.h \
   /usr/include/c++/15/bits/postypes.h \
   /usr/include/c++/15/bits/predefined_ops.h \
   /usr/include/c++/15/bits/ptr_traits.h \
@@ -158,7 +162,6 @@ CMakeFiles/string.dir/string.cpp.o: /home/riccardo/various_implementations/strin
   /usr/include/c++/15/bits/stl_iterator_base_types.h \
   /usr/include/c++/15/bits/stl_pair.h \
   /usr/include/c++/15/bits/stl_raw_storage_iter.h \
-  /usr/include/c++/15/bits/stl_relops.h \
   /usr/include/c++/15/bits/stl_tempbuf.h \
   /usr/include/c++/15/bits/stl_uninitialized.h \
   /usr/include/c++/15/bits/streambuf.tcc \
@@ -180,7 +183,6 @@ CMakeFiles/string.dir/string.cpp.o: /home/riccardo/various_implementations/strin
   /usr/include/c++/15/cstdint \
   /usr/include/c++/15/cstdio \
   /usr/include/c++/15/cstdlib \
-  /usr/include/c++/15/cstring \
   /usr/include/c++/15/cwchar \
   /usr/include/c++/15/cwctype \
   /usr/include/c++/15/debug/assertions.h \
@@ -213,7 +215,7 @@ CMakeFiles/string.dir/string.cpp.o: /home/riccardo/various_implementations/strin
   /usr/include/c++/15/tuple \
   /usr/include/c++/15/type_traits \
   /usr/include/c++/15/typeinfo \
-  /usr/include/c++/15/utility \
+  /usr/include/c++/15/variant \
   /usr/include/c++/15/x86_64-redhat-linux/bits/atomic_word.h \
   /usr/include/c++/15/x86_64-redhat-linux/bits/c++allocator.h \
   /usr/include/c++/15/x86_64-redhat-linux/bits/c++config.h \
@@ -247,8 +249,6 @@ CMakeFiles/string.dir/string.cpp.o: /home/riccardo/various_implementations/strin
   /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/stdlib.h \
-  /usr/include/string.h \
-  /usr/include/strings.h \
   /usr/include/sys/cdefs.h \
   /usr/include/sys/select.h \
   /usr/include/sys/single_threaded.h \
@@ -308,10 +308,6 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h:
 
-/usr/include/c++/15/bits/memory_resource.h:
-
-/usr/include/c++/15/bits/atomic_lockfree_defines.h:
-
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h:
 
 /usr/include/c++/15/bits/localefwd.h:
@@ -327,10 +323,6 @@ CMakeFiles/string.dir/string.cpp.o:
 /usr/include/ctype.h:
 
 /usr/include/bits/types/locale_t.h:
-
-/usr/include/c++/15/bits/memoryfwd.h:
-
-/usr/include/asm-generic/int-ll64.h:
 
 /usr/include/c++/15/bits/iterator_concepts.h:
 
@@ -352,6 +344,10 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/include/c++/15/bits/atomic_wait.h:
 
+/usr/include/c++/15/bits/atomic_lockfree_defines.h:
+
+/usr/include/c++/15/bits/memory_resource.h:
+
 /usr/include/c++/15/bits/atomic_base.h:
 
 /usr/include/pthread.h:
@@ -364,7 +360,9 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/include/c++/15/backward/binders.h:
 
-/usr/include/c++/15/utility:
+/usr/include/c++/15/array:
+
+/usr/include/c++/15/tuple:
 
 /usr/include/bits/xopen_lim.h:
 
@@ -468,7 +466,15 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/include/bits/types/struct_sched_param.h:
 
+/usr/include/c++/15/variant:
+
 /usr/include/bits/confname.h:
+
+/usr/include/c++/15/bits/stl_iterator_base_funcs.h:
+
+/usr/include/c++/15/ext/atomicity.h:
+
+/usr/include/limits.h:
 
 /usr/include/c++/15/bits/char_traits.h:
 
@@ -502,8 +508,6 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/include/c++/15/pstl/glue_memory_defs.h:
 
-/usr/include/asm/types.h:
-
 /usr/include/alloca.h:
 
 /usr/include/bits/stdint-least.h:
@@ -529,6 +533,14 @@ CMakeFiles/string.dir/string.cpp.o:
 /usr/include/asm-generic/posix_types.h:
 
 /usr/include/stdc-predef.h:
+
+/usr/include/asm-generic/int-ll64.h:
+
+/usr/include/c++/15/bits/memoryfwd.h:
+
+/usr/include/asm/types.h:
+
+/usr/include/c++/15/bits/monostate.h:
 
 /usr/include/bits/locale.h:
 
@@ -578,6 +590,8 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/include/bits/wchar.h:
 
+/usr/include/c++/15/bits/enable_special_members.h:
+
 /usr/include/bits/types/struct___jmp_buf_tag.h:
 
 /usr/include/c++/15/bits/ostream_insert.h:
@@ -624,6 +638,8 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/include/c++/15/bits/ostream.tcc:
 
+/usr/include/c++/15/bits/parse_numbers.h:
+
 /usr/include/bits/local_lim.h:
 
 /usr/include/c++/15/bits/postypes.h:
@@ -639,8 +655,6 @@ CMakeFiles/string.dir/string.cpp.o:
 /usr/include/bits/types/struct_FILE.h:
 
 /usr/include/c++/15/cctype:
-
-/usr/include/c++/15/tuple:
 
 /usr/include/c++/15/bits/shared_ptr.h:
 
@@ -660,8 +674,6 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/include/c++/15/typeinfo:
 
-/usr/include/c++/15/bits/stl_relops.h:
-
 /usr/include/c++/15/bits/stl_algobase.h:
 
 /usr/include/c++/15/clocale:
@@ -676,17 +688,9 @@ CMakeFiles/string.dir/string.cpp.o:
 
 /usr/include/c++/15/cwchar:
 
-/usr/include/string.h:
-
 /usr/include/c++/15/bits/stl_iterator.h:
 
 /usr/include/c++/15/memory:
-
-/usr/include/c++/15/bits/stl_iterator_base_funcs.h:
-
-/usr/include/c++/15/ext/atomicity.h:
-
-/usr/include/limits.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o:
 
@@ -717,8 +721,6 @@ CMakeFiles/string.dir/string.cpp.o:
 /usr/include/c++/15/concepts:
 
 /usr/include/c++/15/cstdint:
-
-/usr/include/c++/15/cstring:
 
 /usr/include/c++/15/cwctype:
 
@@ -757,6 +759,10 @@ CMakeFiles/string.dir/string.cpp.o:
 /usr/include/linux/errno.h:
 
 /usr/include/c++/15/new:
+
+/usr/include/c++/15/bits/exception.h:
+
+/usr/include/c++/15/ostream:
 
 /usr/include/c++/15/pstl/execution_defs.h:
 
@@ -825,12 +831,6 @@ CMakeFiles/string.dir/string.cpp.o:
 /usr/include/stdio.h:
 
 /usr/include/stdlib.h:
-
-/usr/include/c++/15/bits/exception.h:
-
-/usr/include/c++/15/ostream:
-
-/usr/include/strings.h:
 
 /usr/include/sys/select.h:
 
