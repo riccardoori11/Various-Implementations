@@ -138,7 +138,7 @@ CMakeFiles/string.dir/string.cpp.o: \
  /usr/include/c++/15/bits/locale_facets.tcc \
  /usr/include/c++/15/bits/basic_ios.tcc \
  /usr/include/c++/15/bits/ostream.tcc /usr/include/c++/15/istream \
- /usr/include/c++/15/bits/istream.tcc \
+ /usr/include/c++/15/bits/istream.tcc /usr/include/assert.h \
  /home/riccardo/various_implementations/include/string.hpp \
  /usr/include/c++/15/array /usr/include/c++/15/memory \
  /usr/include/c++/15/bits/stl_tempbuf.h \
@@ -174,7 +174,8 @@ CMakeFiles/string.dir/string.cpp.o: \
  /usr/include/c++/15/bits/ranges_uninitialized.h \
  /usr/include/c++/15/bits/ranges_algobase.h \
  /usr/include/c++/15/pstl/glue_memory_defs.h \
- /usr/include/c++/15/pstl/execution_defs.h /usr/include/c++/15/variant \
+ /usr/include/c++/15/pstl/execution_defs.h /usr/include/c++/15/utility \
+ /usr/include/c++/15/bits/stl_relops.h /usr/include/c++/15/variant \
  /usr/include/c++/15/bits/enable_special_members.h \
  /usr/include/c++/15/bits/monostate.h \
  /usr/include/c++/15/bits/parse_numbers.h
