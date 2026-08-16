@@ -19,5 +19,7 @@ int main(){
 		ricc::variant<int, float> v1 = 12;
 		assert(ricc::get<int>(v1) == 12);
 
+		std::cout << ricc::get<int>(v1) << std::endl;
+
 		return 0;
 }

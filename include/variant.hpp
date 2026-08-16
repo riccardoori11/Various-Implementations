@@ -8,6 +8,7 @@
 namespace ricc{
 
 /*Forward declaration for get*/
+/*
 template<typename First,typename ...Rest>
 class variant;
 
@@ -16,7 +17,7 @@ constexpr T& get(variant<First, Rest...>& value);
 
 template<typename T, typename First, typename ...Rest>
 constexpr const T& get(const variant<First, Rest...>& value);
-
+*/
 /*
  * Generalisation
  * wrap idx in index_of
@@ -84,12 +85,18 @@ public:
 		~variant(){
 
 		}
-
+/*
 		template<typename T, typename F, typename ...R>
 		friend constexpr T& get(variant<F,R...>& value);
 
 		template<typename T, typename F, typename ...R>
 		friend constexpr const T& get(const variant<F,R...>& value);
+
+		*/
+		constexpr auto& data() noexcept {
+
+				return data_;
+		}
 
 };
 
@@ -109,7 +116,7 @@ constexpr T& get(variant<First,Rest...>& value){
 		using T_NORM = std::decay_t<T>;
 		if (expected_index == value.getIndex()){
 
-				return *reinterpret_cast<T_NORM*>(value.data_);
+				return *reinterpret_cast<T_NORM*>(value.data());
 		}
 		else{
 
@@ -124,7 +131,7 @@ constexpr const T& get(const variant<First,Rest...>& value){
 		using T_NORM = std::decay_t<T>;
 		if (expected_index == value.getIndex()){
 
-				return *reinterpret_cast<const T_NORM*>(value.data_);
+				return *reinterpret_cast<const T_NORM*>(value.data());
 		}
 		else{
 
