@@ -2,8 +2,12 @@
 
 int main(){
 
-		auto a1 = ricc::any(12);
-		std::cout << "a1 is int:" << a1.any_cast<int>() << std::endl;
+		ricc::any a1(1);
+		std::cout << "a1 is int: " << a1.any_cast<int>() << std::endl;
+
+		std::string hi{"Hello World!"};
+		a1 = hi;
+		std::cout << "a1 is string: " << a1.any_cast<std::string>() << std::endl;
 
 		return 0;
 }

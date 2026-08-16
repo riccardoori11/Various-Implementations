@@ -60,13 +60,14 @@ struct block_deleter{
 				
 
 				const auto old_map_size = blocks.size();
-
+/*
 				if (old_map_size == 0){
 
 						blocks.resize(Initial_Map_size);
 						start = (Initial_Map_size * Block_size) / 2;
 						return;
 				}
+				*/
 
 				const auto new_map_size = old_map_size * gf;
 

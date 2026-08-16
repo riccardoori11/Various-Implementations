@@ -47,6 +47,11 @@ function.cpp
 
 )
 
+add_executable(variant
+  variant.cpp 
+
+)
+
 add_executable(dequeue
   dequeue.cpp 
 
@@ -72,6 +77,11 @@ target_link_libraries(string
 )
 
 target_link_libraries(vector
+    PRIVATE
+        implementation
+)
+
+target_link_libraries(variant
     PRIVATE
         implementation
 )

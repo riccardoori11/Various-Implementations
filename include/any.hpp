@@ -1,3 +1,4 @@
+#include <any>
 #include <type_traits>
 #include <iostream>
 #include <cstddef>
@@ -10,94 +11,81 @@ namespace ricc{
 class any{
 
 private:
+
 template <typename T>
-static constexpr bool isSmall = std::is_same_v<T,int>; 
+static constexpr bool is_small = std::is_same_v<T,int>;  
 
-using run_time_destructor = std::unique_ptr<void,void (*)(void*)>;
+using deleter = std::unique_ptr<void,void(*)(void*)>;
 
-union {
+constexpr static auto SSO_SIZE = sizeof(void*) * 4;
 
-		std::array<std::byte, sizeof(void*)* 4> inline_buffer{};
+union{
 
-		void* heap_ptr;
+		std::array<std::byte,SSO_SIZE> inline_buff;
+		void* ptr;
+}
+sso;
 
-}storage;
-
-const std::type_info* type_{nullptr};
-
-run_time_destructor data_{
+deleter data_{
 
 		nullptr,
-		[](void*){} 
+		[](void*){}
 };
+
+
+const std::type_info* type_;
 
 public:
 
-any() noexcept = delete;
-
-any(const any& other) = delete;
-any& operator= (const any& other) = delete;
-
-any(any&& other) = delete;
-any& operator = (any&& other) = delete;
-
-
-template<typename T>
+template <typename T>
 any(T object){
 
-		using t = std::decay_t<T>;
+		using U = std::decay_t<T>;
 
-		type_ = &typeid(t);
-		if constexpr (isSmall<t>) {
+		if constexpr (is_small<U>){
 
-				t* ptr = std::construct_at(reinterpret_cast<t*>(storage.inline_buffer.data()),std::move(object));
+				auto ptr = std::construct_at(reinterpret_cast<U*>(sso.inline_buff.data()), object);
 
-		auto destroy_inline = [](void* ptr){
+				auto destory_soo_buff = [](void* ptr){
 
-				std::destroy_at(static_cast<t*>(ptr));
-		};
-		data_ = run_time_destructor(
-
-						static_cast<void*>(ptr),
-						destroy_inline
-						); 
-
-		
-		}
-		else{
-
-				t* ptr = new t(std::move(object));
-
-				auto destroy_heap = [](void* ptr){
-
-						delete static_cast<t*>(ptr);
+						std::destroy_at(static_cast<U*>(ptr));
 				};
 
-				data_ = run_time_destructor(
+				data_ = {
+						ptr,
+						destory_soo_buff
+				};
 
-						static_cast<void*>(ptr),
-						destroy_heap
-								);
+		}
+		else{
+				auto ptr = new U(object);
+
+				auto destory_soo_buff = [](void* ptr){
+
+						delete static_cast<U*>(ptr);
+				};
+
+				data_ = {
+						ptr,
+						destory_soo_buff
+				};
 		}
 
-
+		type_ = &typeid(U);
 }
-
 
 template<typename T>
 T& any_cast(){
 
-		if (!type_ || typeid(T) != *type_){
+		using U = std::decay_t<T>;
+		if (!type_  || type_ != &typeid(U)){
 
-				throw std::bad_cast();
+				throw std::bad_any_cast();
+				
 		}
 
-		using t = std::decay_t<T>;
-		return *static_cast<t*>(data_.get());
-
+		return *static_cast<U*>(data_.get());
 }
 
 };
-
-
 }
