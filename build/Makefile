@@ -202,6 +202,19 @@ function/fast:
 .PHONY : function/fast
 
 #=============================================================================
+# Target rules for targets named variant
+
+# Build rule for target.
+variant: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 variant
+.PHONY : variant
+
+# fast build rule for target.
+variant/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/variant.dir/build.make CMakeFiles/variant.dir/build
+.PHONY : variant/fast
+
+#=============================================================================
 # Target rules for targets named dequeue
 
 # Build rule for target.
@@ -358,6 +371,30 @@ unique_ptr.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/unique_ptr.dir/build.make CMakeFiles/unique_ptr.dir/unique_ptr.cpp.s
 .PHONY : unique_ptr.cpp.s
 
+variant.o: variant.cpp.o
+.PHONY : variant.o
+
+# target to build an object file
+variant.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/variant.dir/build.make CMakeFiles/variant.dir/variant.cpp.o
+.PHONY : variant.cpp.o
+
+variant.i: variant.cpp.i
+.PHONY : variant.i
+
+# target to preprocess a source file
+variant.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/variant.dir/build.make CMakeFiles/variant.dir/variant.cpp.i
+.PHONY : variant.cpp.i
+
+variant.s: variant.cpp.s
+.PHONY : variant.s
+
+# target to generate assembly for a file
+variant.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/variant.dir/build.make CMakeFiles/variant.dir/variant.cpp.s
+.PHONY : variant.cpp.s
+
 vector.o: vector.cpp.o
 .PHONY : vector.o
 
@@ -397,6 +434,7 @@ help:
 	@echo "... function"
 	@echo "... string"
 	@echo "... unique_ptr"
+	@echo "... variant"
 	@echo "... vector"
 	@echo "... any.o"
 	@echo "... any.i"
@@ -416,6 +454,9 @@ help:
 	@echo "... unique_ptr.o"
 	@echo "... unique_ptr.i"
 	@echo "... unique_ptr.s"
+	@echo "... variant.o"
+	@echo "... variant.i"
+	@echo "... variant.s"
 	@echo "... vector.o"
 	@echo "... vector.i"
 	@echo "... vector.s"

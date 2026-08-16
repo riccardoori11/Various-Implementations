@@ -53,5 +53,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/any.dir/DependInfo.cmake"
   "CMakeFiles/forward_list.dir/DependInfo.cmake"
   "CMakeFiles/function.dir/DependInfo.cmake"
+  "CMakeFiles/variant.dir/DependInfo.cmake"
   "CMakeFiles/dequeue.dir/DependInfo.cmake"
   )

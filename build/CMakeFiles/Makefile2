@@ -69,6 +69,7 @@ all: CMakeFiles/unique_ptr.dir/all
 all: CMakeFiles/any.dir/all
 all: CMakeFiles/forward_list.dir/all
 all: CMakeFiles/function.dir/all
+all: CMakeFiles/variant.dir/all
 all: CMakeFiles/dequeue.dir/all
 .PHONY : all
 
@@ -79,6 +80,7 @@ codegen: CMakeFiles/unique_ptr.dir/codegen
 codegen: CMakeFiles/any.dir/codegen
 codegen: CMakeFiles/forward_list.dir/codegen
 codegen: CMakeFiles/function.dir/codegen
+codegen: CMakeFiles/variant.dir/codegen
 codegen: CMakeFiles/dequeue.dir/codegen
 .PHONY : codegen
 
@@ -93,6 +95,7 @@ clean: CMakeFiles/unique_ptr.dir/clean
 clean: CMakeFiles/any.dir/clean
 clean: CMakeFiles/forward_list.dir/clean
 clean: CMakeFiles/function.dir/clean
+clean: CMakeFiles/variant.dir/clean
 clean: CMakeFiles/dequeue.dir/clean
 .PHONY : clean
 
@@ -103,7 +106,7 @@ clean: CMakeFiles/dequeue.dir/clean
 CMakeFiles/vector.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=13,14 "Built target vector"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=15,16 "Built target vector"
 .PHONY : CMakeFiles/vector.dir/all
 
 # Build rule for subdir invocation for target.
@@ -120,7 +123,7 @@ vector: CMakeFiles/vector.dir/rule
 # codegen rule for target.
 CMakeFiles/vector.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=13,14 "Finished codegen for target vector"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=15,16 "Finished codegen for target vector"
 .PHONY : CMakeFiles/vector.dir/codegen
 
 # clean rule for target.
@@ -287,6 +290,38 @@ CMakeFiles/function.dir/codegen:
 CMakeFiles/function.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/clean
 .PHONY : CMakeFiles/function.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/variant.dir
+
+# All Build rule for target.
+CMakeFiles/variant.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/variant.dir/build.make CMakeFiles/variant.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/variant.dir/build.make CMakeFiles/variant.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=13,14 "Built target variant"
+.PHONY : CMakeFiles/variant.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/variant.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riccardo/various_implementations/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/variant.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/riccardo/various_implementations/build/CMakeFiles 0
+.PHONY : CMakeFiles/variant.dir/rule
+
+# Convenience name for target.
+variant: CMakeFiles/variant.dir/rule
+.PHONY : variant
+
+# codegen rule for target.
+CMakeFiles/variant.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/variant.dir/build.make CMakeFiles/variant.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/riccardo/various_implementations/build/CMakeFiles --progress-num=13,14 "Finished codegen for target variant"
+.PHONY : CMakeFiles/variant.dir/codegen
+
+# clean rule for target.
+CMakeFiles/variant.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/variant.dir/build.make CMakeFiles/variant.dir/clean
+.PHONY : CMakeFiles/variant.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/dequeue.dir
