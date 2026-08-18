@@ -1,6 +1,6 @@
 #include <algorithm>
+#include <utility>
 #include <cstddef>
-#include <iostream>
 #include <memory>
 #include <type_traits>
 #include <variant>
@@ -8,7 +8,6 @@
 namespace ricc{
 
 /*Forward declaration for get*/
-/*
 template<typename First,typename ...Rest>
 class variant;
 
@@ -17,7 +16,6 @@ constexpr T& get(variant<First, Rest...>& value);
 
 template<typename T, typename First, typename ...Rest>
 constexpr const T& get(const variant<First, Rest...>& value);
-*/
 /*
  * Generalisation
  * wrap idx in index_of
@@ -52,6 +50,63 @@ private:
 
 		alignas(Storage_align) std::byte data_[Storage_size_];
 
+		template<typename T>
+		static void Copy_type(void* destination, const void* source){
+
+				const auto* object_source = static_cast<const T*>(source);
+				std::construct_at( static_cast<T*>(destination), *object_source);
+		}
+
+
+		template<typename T>
+		static void Move_Type(void* destination, void* source){
+
+				auto *dst = static_cast<T*>(destination);
+				auto *src = static_cast<T*>(source);
+
+				std::swap(*dst,*src);
+
+		}
+
+		template<typename T>
+		static void Destroy_type(void* ptr){
+
+				auto* obj = static_cast<T*>(ptr);
+
+				std::destroy_at(obj);
+		}
+
+		/*type erasure*/
+		struct operations{
+
+				using Copy = void (*)(void* , const void* );
+				Copy copy;
+
+				using Move = void (*)(void* , void* );
+				Move move;
+
+				using Destroy = void(*)(void);
+				Destroy destroy;
+				
+		};
+
+		constexpr static operations op[] = {
+				operations{
+						&Copy_type<First>,
+						&Move_Type<First>,
+						&Destroy_type<First>
+				},
+				operations{
+						&Copy_type<Rest...>,
+						&Move_Type<Rest...>,
+						&Destroy_type<Rest...>
+				}
+				
+
+		};
+
+
+
 public:
 		/*value initialized*/
 		variant() :index(){
@@ -64,6 +119,7 @@ public:
 		}
 
 		template <typename U>
+		requires (!std::is_same_v<variant,std::remove_cvref_t<U>>)
 		variant(U&& object){
 
 				using U_NORM = std::decay_t<U>;
@@ -75,35 +131,49 @@ public:
 				index = index_types;
 				
 		}
+		variant(const variant& other){
 
-		variant(const variant& other) = delete;
+				op[other.index].copy
+						(
+						 data_,
+						 other.data_
+						 );
+
+				index = other.index;
+
+		}
+		
 		variant& operator= (const variant& other) = delete;
 
-		variant(variant&& other) = delete;
+		variant(variant&& other):index(std::exchange(other.index,0))
+		{
+
+				op[other.index].move(
+
+						data_,
+						other.data_
+								);
+		}
 		variant& operator = (variant&& other) = delete;
 
 		~variant(){
 
+				op[index].destroy(data_);
 		}
-/*
 		template<typename T, typename F, typename ...R>
 		friend constexpr T& get(variant<F,R...>& value);
 
 		template<typename T, typename F, typename ...R>
 		friend constexpr const T& get(const variant<F,R...>& value);
 
-		*/
-		constexpr auto& data() noexcept {
-
-				return data_;
-		}
+	
 
 };
 
-template <typename T, typename ...Rest>
-constexpr bool holds_alternative(const variant<Rest...>& value){
+template <typename T,typename First, typename ...Ts>
+constexpr bool holds_alternative(const variant<First,Ts...>& value){
 
-		constexpr std::size_t expected_index = index_of_v<T,Rest...>;
+		constexpr std::size_t expected_index = index_of_v<T,First,Ts...>;
 
 		return value.getIndex() == expected_index;
 }
@@ -116,7 +186,8 @@ constexpr T& get(variant<First,Rest...>& value){
 		using T_NORM = std::decay_t<T>;
 		if (expected_index == value.getIndex()){
 
-				return *reinterpret_cast<T_NORM*>(value.data());
+				auto* ptr = reinterpret_cast<T_NORM*>(value.data_);
+				return *ptr;
 		}
 		else{
 
@@ -131,7 +202,9 @@ constexpr const T& get(const variant<First,Rest...>& value){
 		using T_NORM = std::decay_t<T>;
 		if (expected_index == value.getIndex()){
 
-				return *reinterpret_cast<const T_NORM*>(value.data());
+				auto *ptr =  reinterpret_cast<const T_NORM*>(value.data_);
+				return *ptr;
+				 
 		}
 		else{
 

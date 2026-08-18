@@ -11,7 +11,7 @@ int main(){
 
 		assert(std::get<int>(v) == 12);
 
-		ricc::variant<int, double> value{3.1};
+		ricc::variant<double, int> value{3.1};
 
 		assert(ricc::holds_alternative<int>(value) == 0);
 		assert(ricc::holds_alternative<double>(value) == 1);
@@ -19,7 +19,14 @@ int main(){
 		ricc::variant<int, float> v1 = 12;
 		assert(ricc::get<int>(v1) == 12);
 
-		std::cout << ricc::get<int>(v1) << std::endl;
+
+		ricc::variant<int,float> v2{v1};
+
+		ricc::variant<int,float> v3{std::move(v1)};
+
+		assert(ricc::get<int>(v3) == 12);
+		assert(ricc::holds_alternative<int>(v3) == 1);
+		assert(ricc::holds_alternative<float>(v3) == 0);
 
 		return 0;
 }
