@@ -67,7 +67,7 @@ private:
 				std::swap(*dst,*src);
 
 		}
-
+/*
 		template<typename T>
 		static void Destroy_type(void* ptr){
 
@@ -76,6 +76,7 @@ private:
 				std::destroy_at(obj);
 		}
 
+		*/
 		/*type erasure*/
 		struct operations{
 
@@ -94,12 +95,10 @@ private:
 				operations{
 						&Copy_type<First>,
 						&Move_Type<First>,
-						&Destroy_type<First>
 				},
 				operations{
 						&Copy_type<Rest...>,
 						&Move_Type<Rest...>,
-						&Destroy_type<Rest...>
 				}
 				
 
@@ -155,11 +154,12 @@ public:
 								);
 		}
 		variant& operator = (variant&& other) = delete;
-
+/*
 		~variant(){
 
 				op[index].destroy(data_);
 		}
+*/
 		template<typename T, typename F, typename ...R>
 		friend constexpr T& get(variant<F,R...>& value);
 
@@ -208,7 +208,7 @@ constexpr const T& get(const variant<First,Rest...>& value){
 		}
 		else{
 
-				throw std::bad_variant_access();
+				std::bad_variant_access();
 		}
 }
  

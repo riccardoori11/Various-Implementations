@@ -15,77 +15,102 @@ private:
 template <typename T>
 static constexpr bool is_small = std::is_same_v<T,int>;  
 
-using deleter = std::unique_ptr<void,void(*)(void*)>;
 
-constexpr static auto SSO_SIZE = sizeof(void*) * 4;
 
-union{
+struct operations{
 
-		std::array<std::byte,SSO_SIZE> inline_buff;
-		void* ptr;
-}
-sso;
+		void* (*copy)(void*, const void*);
 
-deleter data_{
-
-		nullptr,
-		[](void*){}
 };
 
 
+
+constexpr static auto SSO_SIZE = sizeof(void*) * 4;
+
+union SBO{
+
+		std::array<std::byte,SSO_SIZE> inline_buff;
+}
+sbo;
+
+
+void* data_;
+
+template<typename T>
+static void* copy_type(void* destination, const void* source){
+
+		using T_NORM = std::decay_t<T>;
+
+		T* T_destination = static_cast<T*>(destination);
+
+		const T* T_src = static_cast<const T*>(source);
+
+		if constexpr (is_small<T_NORM>) {
+				return std::construct_at(T_destination, *T_src);
+		}
+		else{
+				std::cout << "Heap allocated!!!!" << std::endl;
+				return new T(*T_src);
+		}
+}
+template<typename T>
+inline static operations op{
+
+		&copy_type<T>
+};
+
 const std::type_info* type_;
 
+const operations* oper;
+
 public:
+
+any() = default;
 
 template <typename T>
 any(T object){
 
-		using U = std::decay_t<T>;
+		using T_NORM = std::decay_t<T>;
 
-		if constexpr (is_small<U>){
+		type_ = &typeid(T_NORM);
 
-				auto ptr = std::construct_at(reinterpret_cast<U*>(sso.inline_buff.data()), object);
+		oper = &op<T_NORM>;
 
-				auto destory_soo_buff = [](void* ptr){
+		if constexpr (is_small<T_NORM>) {
+		
+				T* loc = reinterpret_cast<T_NORM*>(sbo.inline_buff.data());
 
-						std::destroy_at(static_cast<U*>(ptr));
-				};
-
-				data_ = {
-						ptr,
-						destory_soo_buff
-				};
-
+				auto* ptr = std::construct_at(loc,object );
+				data_ = ptr;
 		}
 		else{
-				auto ptr = new U(object);
 
-				auto destory_soo_buff = [](void* ptr){
-
-						delete static_cast<U*>(ptr);
-				};
-
-				data_ = {
-						ptr,
-						destory_soo_buff
-				};
+				auto* ptr = new T(object);
+				data_ = ptr;
 		}
 
-		type_ = &typeid(U);
+}
+
+any(const any& other):oper(other.oper){	
+
+		std::cout << "Copied " << std::endl;
+
+		data_ = oper->copy(
+
+				sbo.inline_buff.data(),
+				other.data_
+						);
+
 }
 
 template<typename T>
 T& any_cast(){
 
-		using U = std::decay_t<T>;
-		if (!type_  || type_ != &typeid(U)){
+		using T_NORM = std::decay_t<T>;
 
-				throw std::bad_any_cast();
-				
-		}
-
-		return *static_cast<U*>(data_.get());
+		return *reinterpret_cast<T_NORM*>(data_);
 }
+
 
 };
 }
