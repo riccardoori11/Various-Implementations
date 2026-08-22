@@ -56,6 +56,12 @@ add_executable(dequeue
   dequeue.cpp 
 
 )
+
+add_executable(shared_ptr
+  shared_ptr.cpp 
+
+)
+
 target_link_libraries(dequeue
     PRIVATE
         implementation
@@ -86,7 +92,17 @@ target_link_libraries(variant
         implementation
 )
 
+target_link_libraries(function
+    PRIVATE
+        implementation
+)
+
 target_link_libraries(forward_list
+    PRIVATE
+        implementation
+)
+
+target_link_libraries(shared_ptr
     PRIVATE
         implementation
 )

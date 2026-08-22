@@ -18,6 +18,13 @@ int main(){
 
 		ricc::unique_ptr<int> null;
 		assert(null == nullptr);
+
+		ricc::unique_ptr<int> up1(new int(19));
+		ricc::unique_ptr<int> up2(new int(10));
+
+		up1.swap(up2);
+
+		std::cout << *up1 << std::endl;
 		
 		return 0;
 }

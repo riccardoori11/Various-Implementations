@@ -31,7 +31,7 @@
 },
 {
   "directory": "/home/riccardo/various_implementations/build",
-  "command": "/usr/bin/c++    -o CMakeFiles/function.dir/function.cpp.o -c /home/riccardo/various_implementations/function.cpp",
+  "command": "/usr/bin/c++  -I/home/riccardo/various_implementations/include -std=gnu++20 -o CMakeFiles/function.dir/function.cpp.o -c /home/riccardo/various_implementations/function.cpp",
   "file": "/home/riccardo/various_implementations/function.cpp",
   "output": "CMakeFiles/function.dir/function.cpp.o"
 },
@@ -46,5 +46,11 @@
   "command": "/usr/bin/c++  -I/home/riccardo/various_implementations/include -std=gnu++20 -o CMakeFiles/dequeue.dir/dequeue.cpp.o -c /home/riccardo/various_implementations/dequeue.cpp",
   "file": "/home/riccardo/various_implementations/dequeue.cpp",
   "output": "CMakeFiles/dequeue.dir/dequeue.cpp.o"
+},
+{
+  "directory": "/home/riccardo/various_implementations/build",
+  "command": "/usr/bin/c++  -I/home/riccardo/various_implementations/include -std=gnu++20 -o CMakeFiles/shared_ptr.dir/shared_ptr.cpp.o -c /home/riccardo/various_implementations/shared_ptr.cpp",
+  "file": "/home/riccardo/various_implementations/shared_ptr.cpp",
+  "output": "CMakeFiles/shared_ptr.dir/shared_ptr.cpp.o"
 }
 ]

@@ -63,7 +63,6 @@ struct A{
 
 
 int main(){
-
 		ricc::Vector<int> a{};
 		a.push_back(4);
 		ricc::Vector<int> b{a};
@@ -88,7 +87,7 @@ int main(){
 		b.pop_back();
 
 		assert(b.empty());
-
+/*
 		ricc::Vector<A> A;
 		A.reserve(10);
 		struct A two{"two"};
@@ -102,6 +101,15 @@ int main(){
 		std::cout << "emplace with A&&" << std::endl;
 		A.emplace_back(std::move(three));
 
+
+*/
+
+		ricc::Vector<int> std12;
+		std12.push_back(45);
+		std12.push_back(45);
+		std12.push_back(45);
+		
+		std::cout << std12 << std::endl;
 
 		return 0;
 

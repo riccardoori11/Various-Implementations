@@ -16,65 +16,70 @@ template <typename T>
 class unique_ptr{
 
 
-		private:
+private:
 
-				T* ptr{nullptr};
+		T* ptr{nullptr};
 
-		public:
+public:
 
-				
-				unique_ptr() = default;
+		
+		unique_ptr() = default;
 
-				~unique_ptr(){
+		~unique_ptr(){
 
-						if (ptr == nullptr){
+				if (ptr == nullptr){
 
-								return;
-						}
-						delete ptr;
-						ptr = nullptr;
+						return;
 				}
+				delete ptr;
+				ptr = nullptr;
+		}
 
-				unique_ptr(T* p): ptr(p)
-				{
-				}
+		unique_ptr(T* p): ptr(p)
+		{
+		}
 
-				unique_ptr(const unique_ptr& other) = delete;
+		unique_ptr(const unique_ptr& other) = delete;
 
-				unique_ptr& operator = (const unique_ptr& other) = delete;
+		unique_ptr& operator = (const unique_ptr& other) = delete;
 
-				unique_ptr(unique_ptr&& other){
+		unique_ptr(unique_ptr&& other){
 
-						std::swap(ptr,other.ptr);
-				}
+				std::swap(ptr,other.ptr);
+		}
 
-				unique_ptr& operator= (unique_ptr&& other){
+		unique_ptr& operator= (unique_ptr&& other){
 
-						if (this == &other){
-
-								return *this;
-						}
-
-						delete ptr;
-						ptr = std::exchange(other.ptr, nullptr);
+				if (this == &other){
 
 						return *this;
 				}
 
-				T& operator*(){
+				delete ptr;
+				ptr = std::exchange(other.ptr, nullptr);
 
-						return (*ptr);
-				}
+				return *this;
+		}
 
-				T* get(){
+		T& operator*(){
 
-						return ptr;
-				}
+				return (*ptr);
+		}
 
-				const T* get() const{
+		T* get(){
 
-						return ptr;
-				}
+				return ptr;
+		}
+
+		const T* get() const{
+
+				return ptr;
+		}
+
+		void swap(unique_ptr& other){
+
+				std::swap(ptr,other.ptr);
+		}
 
 				
 

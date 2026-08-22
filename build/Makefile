@@ -227,6 +227,19 @@ dequeue/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dequeue.dir/build.make CMakeFiles/dequeue.dir/build
 .PHONY : dequeue/fast
 
+#=============================================================================
+# Target rules for targets named shared_ptr
+
+# Build rule for target.
+shared_ptr: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shared_ptr
+.PHONY : shared_ptr
+
+# fast build rule for target.
+shared_ptr/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/shared_ptr.dir/build.make CMakeFiles/shared_ptr.dir/build
+.PHONY : shared_ptr/fast
+
 any.o: any.cpp.o
 .PHONY : any.o
 
@@ -322,6 +335,30 @@ list.s: list.cpp.s
 list.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/forward_list.dir/build.make CMakeFiles/forward_list.dir/list.cpp.s
 .PHONY : list.cpp.s
+
+shared_ptr.o: shared_ptr.cpp.o
+.PHONY : shared_ptr.o
+
+# target to build an object file
+shared_ptr.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/shared_ptr.dir/build.make CMakeFiles/shared_ptr.dir/shared_ptr.cpp.o
+.PHONY : shared_ptr.cpp.o
+
+shared_ptr.i: shared_ptr.cpp.i
+.PHONY : shared_ptr.i
+
+# target to preprocess a source file
+shared_ptr.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/shared_ptr.dir/build.make CMakeFiles/shared_ptr.dir/shared_ptr.cpp.i
+.PHONY : shared_ptr.cpp.i
+
+shared_ptr.s: shared_ptr.cpp.s
+.PHONY : shared_ptr.s
+
+# target to generate assembly for a file
+shared_ptr.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/shared_ptr.dir/build.make CMakeFiles/shared_ptr.dir/shared_ptr.cpp.s
+.PHONY : shared_ptr.cpp.s
 
 string.o: string.cpp.o
 .PHONY : string.o
@@ -432,6 +469,7 @@ help:
 	@echo "... dequeue"
 	@echo "... forward_list"
 	@echo "... function"
+	@echo "... shared_ptr"
 	@echo "... string"
 	@echo "... unique_ptr"
 	@echo "... variant"
@@ -448,6 +486,9 @@ help:
 	@echo "... list.o"
 	@echo "... list.i"
 	@echo "... list.s"
+	@echo "... shared_ptr.o"
+	@echo "... shared_ptr.i"
+	@echo "... shared_ptr.s"
 	@echo "... string.o"
 	@echo "... string.i"
 	@echo "... string.s"

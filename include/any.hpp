@@ -1,4 +1,5 @@
 #include <any>
+#include <utility>
 #include <type_traits>
 #include <iostream>
 #include <cstddef>
@@ -20,6 +21,7 @@ static constexpr bool is_small = std::is_same_v<T,int>;
 struct operations{
 
 		void* (*copy)(void*, const void*);
+		void* (*move)(void*, void*);
 
 };
 
@@ -53,15 +55,42 @@ static void* copy_type(void* destination, const void* source){
 				return new T(*T_src);
 		}
 }
-template<typename T>
-inline static operations op{
 
-		&copy_type<T>
+template <typename T>
+static void* move_type(void* destination, void* source){
+
+		using T_NORM = std::decay_t<T>;
+
+		T* T_dest = static_cast<T*>(destination);
+
+		T* T_src = static_cast<T*>(source);
+
+		if constexpr (is_small<T_NORM>){
+
+				auto* ptr = std::construct_at(destination, std::move(*T_src));
+				std::destroy_at(T_src);
+				return ptr;
+
+		}
+		else{
+
+				return source;
+		}
+		
+}
+
+
+
+template<typename T>
+constexpr static operations op{
+
+		&copy_type<T>,
+		&move_type<T>
 };
 
 const std::type_info* type_;
 
-const operations* oper;
+const operations* oper{nullptr};
 
 public:
 
@@ -101,12 +130,34 @@ any(const any& other):oper(other.oper){
 				other.data_
 						);
 
+		type_ = other.type_;
+
+}
+
+any (any&& other): oper(std::exchange(other.oper,nullptr)),type_(std::exchange(other.type_, nullptr)){
+
+		std::cout << "Move" << std::endl;
+
+		data_ = oper->move(
+
+				sbo.inline_buff.data(),
+				other.data_
+
+						);
+
+		other.data_ = nullptr;
+
 }
 
 template<typename T>
 T& any_cast(){
 
 		using T_NORM = std::decay_t<T>;
+
+		if (!type_ || &typeid(T_NORM) != type_){
+
+				throw std::bad_any_cast();
+		}
 
 		return *reinterpret_cast<T_NORM*>(data_);
 }

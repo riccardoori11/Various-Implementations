@@ -259,5 +259,27 @@ constexpr T& at(std::size_t pos) const{
 		return data_[pos];
 }
 
+friend std::ostream& operator << (std::ostream& output, const Vector& vector){
+
+		output << '[';
+
+		for (std::size_t i{}; i < vector.size_; ++i){
+				if (i != 0){
+
+						output << ',';
+				}
+				output << vector.data_[i];
+		}
+
+		output << ']';
+
+		return output;
+		
+}
+
 };
+
+
+
+
 }

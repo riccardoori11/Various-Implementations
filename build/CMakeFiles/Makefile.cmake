@@ -55,4 +55,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/function.dir/DependInfo.cmake"
   "CMakeFiles/variant.dir/DependInfo.cmake"
   "CMakeFiles/dequeue.dir/DependInfo.cmake"
+  "CMakeFiles/shared_ptr.dir/DependInfo.cmake"
   )
