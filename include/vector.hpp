@@ -33,12 +33,7 @@ vector_ptr allocate_helper(std::size_t new_capacity){
 
 }
 
-void swap(Vector& other){
 
-		std::swap(data_,other.data_);
-		std::swap(size_,other.size_);
-		std::swap(capacity_,other.capacity_);
-}
 
 public:
 
@@ -64,19 +59,22 @@ constexpr Vector(const Vector& other):capacity_{other.capacity_}
 		}
 
 		data_ = mem.release();
-		std::cout << "Copy constructor " << std::endl;
 
+}
+
+void swap(Vector& other){
+
+		using std::swap;
+
+		swap(data_,other.data_);
+		swap(size_,other.size_);
+		swap(capacity_,other.capacity_);
 }
 
 // copy assignment
 constexpr Vector& operator= (const Vector& other){
-		if (this == &other){
-		return *this;
-		}
-
-		Vector temp{other};
-		swap(temp);
-		std::cout << "Copy assignment" << std::endl;
+		
+		Vector {other}.swap(*this);
 		return *this;
 }
 
@@ -84,22 +82,14 @@ constexpr Vector& operator= (const Vector& other){
 constexpr Vector(Vector && other) noexcept: 
 		data_{std::exchange(other.data_,nullptr)}, size_{std::exchange(other.size_,0)},capacity_{std::exchange(other.capacity_,0)}  
 {
-		std::cout << "Move constructor" << std::endl;
 }
 
 // move assignment
 constexpr Vector& operator=(Vector&& other) noexcept
 {
 
-		if (this == &other){
+		Vector (std::move(other)).swap(*this);
 
-				return *this;
-		}
-
-		Vector temp(std::move(other));
-		swap(temp);
-
-		std::cout << "Move assingment" << std::endl;
 		return *this;
 
 }
@@ -146,6 +136,7 @@ constexpr void push_back(T&& value){
 		std::construct_at(data_ + size_,std::move(value));
 		++size_;
 }
+
 /*
 *applying move semantics, here args represents any number of forward references
 template <typename... Args>

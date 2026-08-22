@@ -62,6 +62,11 @@ add_executable(shared_ptr
 
 )
 
+add_executable(dup_ptr
+  dup_ptr.cpp 
+
+)
+
 target_link_libraries(dequeue
     PRIVATE
         implementation
@@ -98,6 +103,11 @@ target_link_libraries(function
 )
 
 target_link_libraries(forward_list
+    PRIVATE
+        implementation
+)
+
+target_link_libraries(dup_ptr
     PRIVATE
         implementation
 )

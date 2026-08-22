@@ -240,6 +240,19 @@ shared_ptr/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/shared_ptr.dir/build.make CMakeFiles/shared_ptr.dir/build
 .PHONY : shared_ptr/fast
 
+#=============================================================================
+# Target rules for targets named dup_ptr
+
+# Build rule for target.
+dup_ptr: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 dup_ptr
+.PHONY : dup_ptr
+
+# fast build rule for target.
+dup_ptr/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dup_ptr.dir/build.make CMakeFiles/dup_ptr.dir/build
+.PHONY : dup_ptr/fast
+
 any.o: any.cpp.o
 .PHONY : any.o
 
@@ -287,6 +300,30 @@ dequeue.s: dequeue.cpp.s
 dequeue.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dequeue.dir/build.make CMakeFiles/dequeue.dir/dequeue.cpp.s
 .PHONY : dequeue.cpp.s
+
+dup_ptr.o: dup_ptr.cpp.o
+.PHONY : dup_ptr.o
+
+# target to build an object file
+dup_ptr.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dup_ptr.dir/build.make CMakeFiles/dup_ptr.dir/dup_ptr.cpp.o
+.PHONY : dup_ptr.cpp.o
+
+dup_ptr.i: dup_ptr.cpp.i
+.PHONY : dup_ptr.i
+
+# target to preprocess a source file
+dup_ptr.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dup_ptr.dir/build.make CMakeFiles/dup_ptr.dir/dup_ptr.cpp.i
+.PHONY : dup_ptr.cpp.i
+
+dup_ptr.s: dup_ptr.cpp.s
+.PHONY : dup_ptr.s
+
+# target to generate assembly for a file
+dup_ptr.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dup_ptr.dir/build.make CMakeFiles/dup_ptr.dir/dup_ptr.cpp.s
+.PHONY : dup_ptr.cpp.s
 
 function.o: function.cpp.o
 .PHONY : function.o
@@ -467,6 +504,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... any"
 	@echo "... dequeue"
+	@echo "... dup_ptr"
 	@echo "... forward_list"
 	@echo "... function"
 	@echo "... shared_ptr"
@@ -480,6 +518,9 @@ help:
 	@echo "... dequeue.o"
 	@echo "... dequeue.i"
 	@echo "... dequeue.s"
+	@echo "... dup_ptr.o"
+	@echo "... dup_ptr.i"
+	@echo "... dup_ptr.s"
 	@echo "... function.o"
 	@echo "... function.i"
 	@echo "... function.s"
