@@ -17,6 +17,7 @@ target_compile_features(implementation
 )
 
 
+
 add_executable(vector
   vector.cpp 
 
@@ -67,6 +68,14 @@ add_executable(dup_ptr
 
 )
 
+add_executable(benchmark
+  benchmark.cpp 
+
+)
+target_compile_options(benchmark PRIVATE
+    $<$<CONFIG:Release>:-O3>
+)
+
 target_link_libraries(dequeue
     PRIVATE
         implementation
@@ -78,6 +87,10 @@ target_link_libraries(any
 )
 
 target_link_libraries(unique_ptr
+    PRIVATE
+        implementation
+)
+target_link_libraries(benchmark
     PRIVATE
         implementation
 )

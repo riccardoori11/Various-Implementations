@@ -131,6 +131,7 @@ CMakeFiles/forward_list.dir/list.cpp.o: /home/riccardo/various_implementations/l
   /usr/include/c++/15/bits/stl_iterator_base_types.h \
   /usr/include/c++/15/bits/stl_pair.h \
   /usr/include/c++/15/bits/stl_relops.h \
+  /usr/include/c++/15/bits/stream_iterator.h \
   /usr/include/c++/15/bits/streambuf.tcc \
   /usr/include/c++/15/bits/streambuf_iterator.h \
   /usr/include/c++/15/bits/string_view.tcc \
@@ -162,6 +163,7 @@ CMakeFiles/forward_list.dir/list.cpp.o: /home/riccardo/various_implementations/l
   /usr/include/c++/15/iosfwd \
   /usr/include/c++/15/iostream \
   /usr/include/c++/15/istream \
+  /usr/include/c++/15/iterator \
   /usr/include/c++/15/new \
   /usr/include/c++/15/numbers \
   /usr/include/c++/15/ostream \
@@ -391,6 +393,8 @@ CMakeFiles/forward_list.dir/list.cpp.o:
 
 /home/riccardo/various_implementations/include/list.hpp:
 
+/usr/include/c++/15/iterator:
+
 /usr/include/bits/types/time_t.h:
 
 /usr/include/bits/types/sigset_t.h:
@@ -550,6 +554,8 @@ CMakeFiles/forward_list.dir/list.cpp.o:
 /usr/include/asm-generic/bitsperlong.h:
 
 /usr/include/bits/wchar.h:
+
+/usr/include/c++/15/bits/stream_iterator.h:
 
 /usr/include/bits/types/wint_t.h:
 

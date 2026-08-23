@@ -104,13 +104,19 @@ int main(){
 
 */
 
-		ricc::Vector<int> std12;
+/*		ricc::Vector<int> std12;
 		std12.push_back(45);
 		std12.push_back(45);
 		std12.push_back(45);
 		
 		std::cout << std12 << std::endl;
 
+		*/
+
+		ricc::Vector<int> A{1,23,4,44444};
+
+		assert(A.front() == 1);
+		assert(A.back() == 44444);
 		return 0;
 
 

@@ -1,4 +1,6 @@
+#include <cstddef>
 #include <initializer_list>
+#include <iterator>
 #include <stdexcept>
 #include <utility>
 #include <iostream>
@@ -9,33 +11,104 @@ namespace ricc{
 template<typename T>
 class forward_list{
 
-private:
+public:
 
+		using value_type = T;
 		using reference = T&;
+		using const_reference = const T&;
+		using pointer = T*;
+		using const_pointer = const T*;
+		using size_type = std::size_t;
 
-struct ListNode{
 
-		T value;
-		ListNode* next{nullptr};
+private:
+struct Node{
 
-		ListNode() = default; 
+		value_type value;
+		Node* next{nullptr};
 
-		ListNode(const T& value):value(value)
+		Node() = default; 
+
+		Node(const_reference value):value(value)
 		{
 		}
 
-		ListNode(T&& value):value(std::move((value)))
+		Node(value_type&& value):value(std::move((value)))
 		{
 		}
 };
 
+template<typename U>
+class Iterator{
+
+public:
+		using value_type = typename forward_list<T>::value_type;
+		using reference = typename forward_list<T>::reference;
+		using difference_type = std::ptrdiff_t;
+		using iterator_category = std::forward_iterator_tag;
+		using pointer = typename forward_list<T>::pointer;
+		using iterator_concept = std::forward_iterator_tag;
+		friend class forward_list<T>;
+
+private:
+		Node* curr{};
+
+public:
+
+		Iterator() = default;
+		Iterator(Node* p):curr(p)
+		{
+		}
+		Iterator& operator++(){
+
+				curr = curr->next;
+				return *this;
+		}
+		Iterator operator++(int){
+
+				Iterator temp = *this;
+				operator++();
+				return temp;
+		}
+
+		bool operator == (const Iterator& other){
+
+				return curr == other.curr;
+		}
+
+		U& operator*(){
+				return curr->value;
+		}
+
+		const U& operator*() const {
+				return curr->value;
+		}
+
+		U* operator -> (){
+
+				return curr->value;
+		}
+
+		const U* operator-> () const{
+
+				return curr->value;
+		}
+
+
+
+};
+
+using iterator = Iterator<T>;
+using const_iterator = Iterator<const T>;
+
 std::size_t size_{};
-ListNode* head{nullptr};
+Node* head{nullptr};
 
 constexpr void swap(forward_list& temp){
 		
-		std::swap(size_,temp.size_);
-		std::swap(head,temp.head);
+		using std::swap;
+		swap(size_,temp.size_);
+		swap(head,temp.head);
 
 }
 
@@ -54,6 +127,43 @@ public:
 
 forward_list() = default;
 
+template<std::input_iterator It>
+forward_list(It b, It e){
+
+		if (b == e){
+
+				return;
+		}
+
+		try{
+
+				head = new Node{*b};
+				auto q = head;
+
+				++size_;
+
+				for (++b; b != e; ++b){
+
+						q -> next = new Node{*b};
+						q = q->next;
+						++size_;
+
+				}
+
+
+		}
+		catch(...){
+
+				clear();
+				throw;
+		}
+
+}
+
+forward_list(std::initializer_list<T> lst):forward_list(lst.begin(), lst.end())
+{
+}
+
 // destructor
 ~forward_list(){
 
@@ -61,22 +171,53 @@ forward_list() = default;
 		
 }
 
+iterator begin(){
+
+		return {head};
+}
+
+const_iterator begin() const{
+
+		return {head};
+}
+
+const_iterator cbegin() const{
+
+		return begin();
+}
+
+iterator end(){
+
+		return {};
+}
+
+const_iterator end() const{
+
+		return {};
+}
+
+const_iterator cend() const{
+
+		return end();
+}
+
 forward_list(const forward_list& other):size_(other.size_){
 
-		ListNode* current = other.head->next;
-		head = new ListNode(other.head->value);
-		ListNode* iterator{head};
+		Node* current = other.head->next;
+		head = new Node(other.head->value);
+		Node* iterator{head};
 
 		while(current != nullptr){
 
-				ListNode* newNode = new ListNode(current->value);
+				Node* newNode = new Node(current->value);
 				iterator->next = newNode;
 				current = current->next;
 				iterator = iterator->next;
 
 		}
-		std::cout << "Copy constructed" << std::endl;
 }
+
+
 
 forward_list& operator= (const forward_list& other){
 
@@ -123,13 +264,13 @@ void assign(std::size_t count, const T& value){
 				throw std::range_error("Invalid size");
 		}
 
-		ListNode* dummy = new ListNode();
+		Node* dummy = new Node();
 		dummy ->next = head;
-		ListNode* iterator = dummy;
+		Node* iterator = dummy;
 
 		for (std::size_t i{}; i < count; ++i){
 
-				ListNode* newNode = new ListNode(value);
+				Node* newNode = new Node(value);
 				iterator->next = newNode;
 				iterator = iterator->next;
 		}
@@ -142,21 +283,45 @@ void assign(std::size_t count, const T& value){
 template <typename U>
 void push_front(U&& value){
 
-		ListNode* oldhead = head;
-		ListNode* newNode = new ListNode(std::forward<U>(value));
+		Node* oldhead = head;
+		Node* newNode = new Node(std::forward<U>(value));
 		newNode->next = oldhead;
 		head = newNode;
 		size_++;
 }
 
+iterator insert_after(iterator pos, const_reference value){
+
+		auto new_value = new Node{value};
+
+		new_value ->next = pos.curr->next;
+		pos.curr->next = new_value;
+
+		++size_;
+
+		return new_value;
+
+}
+
+
+iterator erase_after(iterator pos){
+
+		auto p = pos.curr->next->next;
+		delete pos.curr->next;
+		pos.curr->next = p;
+
+		return {p->next};
+}
+
+
 constexpr void reverse(){
 
-		ListNode* node{nullptr};
-		ListNode* current{head};
+		Node* node{nullptr};
+		Node* current{head};
 
 		while (current != nullptr){
 
-				ListNode* temp = current->next;
+				Node* temp = current->next;
 
 				current->next = node;
 				node = current;
@@ -172,10 +337,18 @@ constexpr reference front(){
 		return head->value;
 }
 
+constexpr const_reference front() const{
+		return head->value;
+}
 
-void Print(){
+bool operator == (const forward_list& other){
 
-		ListNode* current = head;
+		return (size_ == other.size_ )&& (std::equal(begin(),end(),other.begin()));
+}
+
+void Print() const{
+
+		Node* current = head;
 		while (current != nullptr){
 
 				std::cout << current->value << std::endl;
@@ -183,28 +356,27 @@ void Print(){
 		}
 }
 
-constexpr std::size_t size(){
+constexpr size_type size() const{
 
 		return size_;
 }
 
 constexpr void popFront(){
 
-		ListNode* old = head->next;
+		Node* old = head->next;
 		delete head;
 		head = old;
 		--size_;
 }
 
+bool empty() const noexcept {
 
+		return !head;
+}
 
 
 };
 
 
 }
-
-
-
-
 

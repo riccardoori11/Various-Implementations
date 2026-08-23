@@ -33,5 +33,10 @@ int main(){
 		letters3.assign(2, 'a');
 		letters3.Print();
 
+		ricc::forward_list<int> list0{1,23,4,5};
+		auto beginIt = list0.begin();
+		list0.insert_after(beginIt,5);
+		list0.Print();
+
 		return 0;
 }

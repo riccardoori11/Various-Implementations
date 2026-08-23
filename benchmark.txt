@@ -1,0 +1,3 @@
+Vector benchmark 1'000'000 int pushback:
+		standard library: 20ms
+		mine: 9ms

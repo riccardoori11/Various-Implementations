@@ -1,4 +1,6 @@
+#include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <memory>
 #include <new>
 #include <stdexcept>
@@ -9,11 +11,21 @@ namespace ricc{
 template <typename T>
 class Vector{
 
+public:
+
+		using value_type = T;
+		using reference = T&;
+		using const_reference = const T&; 
+		using pointer = T*;
+		using const_pointer = const T*;
+		using size_type = std::size_t;
+
+
 private:
 
-T* data_{nullptr}; 
-std::size_t size_{};
-std::size_t capacity_{};
+pointer data_{nullptr}; 
+size_type size_{};
+size_type capacity_{};
 constexpr static int growth_factor{4};
 
 
@@ -37,7 +49,39 @@ vector_ptr allocate_helper(std::size_t new_capacity){
 
 public:
 
-constexpr Vector() = default;
+Vector() = default;
+
+Vector (size_type n, const_reference init):capacity_(n),size_(n)
+{
+
+				auto mem = allocate_helper(capacity_);
+				std::uninitialized_fill(mem.get(),n,init);
+				data_ = mem.release();
+		
+}
+
+Vector(std::initializer_list<T> lst)
+{
+		auto mem = allocate_helper(lst.size());
+
+		try{
+				for (auto value: lst){
+
+						std::construct_at(mem.get() + size_, value);
+						++size_;
+				}
+
+		}
+		catch(...){
+				while (size_ != 0){
+						std::destroy_at(mem.get() + size_);
+						--size_;
+				}
+				throw;
+		}
+
+		data_ = mem.release();
+}
 
 
 ~Vector(){
@@ -54,13 +98,30 @@ constexpr Vector(const Vector& other):capacity_{other.capacity_}
 		
 		auto mem = allocate_helper(capacity_);
 		T* destination = mem.get();
-		for (; size_ < other.size_; ++size_){
+try{
+		for (; size_< other.size_; ++size_){
 				std::construct_at(mem.get() + size_,*(other.data_ + size_));
 		}
 
-		data_ = mem.release();
+}
+catch(...){
+
+		while (size_ != 0){
+
+				--size_;
+				std::destroy_at(mem.get() + size_);
+		}
+
+		throw;
 
 }
+
+		data_ = mem.release();
+		
+}
+
+
+
 
 void swap(Vector& other){
 
@@ -96,7 +157,7 @@ constexpr Vector& operator=(Vector&& other) noexcept
 
 //copies the old elements into the new storage
 // using this as temporary helper allocate function
-constexpr void reserve(std::size_t new_capacity){
+constexpr void reserve(size_type new_capacity){
 
 		if (new_capacity <= capacity_){
 
@@ -126,7 +187,7 @@ constexpr void reserve(std::size_t new_capacity){
 }
 
 
-constexpr void push_back(T&& value){
+ void push_back(T&& value){
 
 		if (size_ == capacity_){
 
@@ -134,6 +195,17 @@ constexpr void push_back(T&& value){
 				reserve(new_capacity);
 		}
 		std::construct_at(data_ + size_,std::move(value));
+		++size_;
+}
+
+ void push_back(const_reference value){
+
+		if (size_ == capacity_){
+
+				std::size_t new_capacity = (size_ == 0) ? 1: capacity_*growth_factor;
+				reserve(new_capacity);
+		}
+		std::construct_at(data_ + size_,value);
 		++size_;
 }
 
@@ -155,7 +227,7 @@ void emplace_back(Args&&... args){
 }
 */
 template <typename... Args>
-constexpr T& emplace_back(Args&&... args){
+constexpr reference emplace_back(Args&&... args){
 
 		if (size_ == capacity_){
 
@@ -169,41 +241,65 @@ constexpr T& emplace_back(Args&&... args){
 		return *(data_+ size_);
 }
 
-constexpr std::size_t size() const{
+size_type size() const{
 
 		return size_;
 }
 
-constexpr std::size_t capacity() const{
+size_type capacity() const{
 
 		return capacity_;
 }
 
-constexpr T& operator[](const std::size_t i) const{
+reference operator[](const std::size_t i) {
 		return *(data_ + i);
 }
 
-constexpr bool empty() const{
+const_reference operator[](const std::size_t i) const {
+		return *(data_ + i);
+}
+
+bool empty() const{
 
 		return size_ == 0;
 }
 
-constexpr T*  begin (){
+reference front(){
+
+		return data_[0];
+}
+
+const_reference front() const{
+
+		return data_[0];
+}
+
+reference back(){
+
+		return data_[size_-1];
+}
+
+const_reference back() const{
+
+		return data_[size_-1];
+}
+
+constexpr pointer  begin (){
 
 		return data_; 
 }
 
-constexpr const T*  cbegin (){
+const const_pointer cbegin () const{
 
 		return data_; 
 }
 
-constexpr T* end(){
+constexpr pointer end(){
 
 		return data_ + size_;
 }
 
-constexpr const T*  cend(){
+constexpr const_pointer  cend() const{
 
 		return data_ + size_;
 }
@@ -230,7 +326,7 @@ constexpr void shrink_to_fit(){
 
 }
 
-constexpr const T& at(const std::size_t pos) {
+constexpr const_reference at(const std::size_t pos) {
 
 		if (pos >= size_){
 
@@ -240,7 +336,7 @@ constexpr const T& at(const std::size_t pos) {
 		return data_[pos];
 }
 
-constexpr T& at(std::size_t pos) const{
+constexpr reference at(std::size_t pos) const{
 
 		if (pos >= size_){
 

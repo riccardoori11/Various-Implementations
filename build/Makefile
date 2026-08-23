@@ -253,6 +253,19 @@ dup_ptr/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dup_ptr.dir/build.make CMakeFiles/dup_ptr.dir/build
 .PHONY : dup_ptr/fast
 
+#=============================================================================
+# Target rules for targets named benchmark
+
+# Build rule for target.
+benchmark: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 benchmark
+.PHONY : benchmark
+
+# fast build rule for target.
+benchmark/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/build
+.PHONY : benchmark/fast
+
 any.o: any.cpp.o
 .PHONY : any.o
 
@@ -276,6 +289,30 @@ any.s: any.cpp.s
 any.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/any.dir/build.make CMakeFiles/any.dir/any.cpp.s
 .PHONY : any.cpp.s
+
+benchmark.o: benchmark.cpp.o
+.PHONY : benchmark.o
+
+# target to build an object file
+benchmark.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/benchmark.cpp.o
+.PHONY : benchmark.cpp.o
+
+benchmark.i: benchmark.cpp.i
+.PHONY : benchmark.i
+
+# target to preprocess a source file
+benchmark.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/benchmark.cpp.i
+.PHONY : benchmark.cpp.i
+
+benchmark.s: benchmark.cpp.s
+.PHONY : benchmark.s
+
+# target to generate assembly for a file
+benchmark.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/benchmark.cpp.s
+.PHONY : benchmark.cpp.s
 
 dequeue.o: dequeue.cpp.o
 .PHONY : dequeue.o
@@ -503,6 +540,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... any"
+	@echo "... benchmark"
 	@echo "... dequeue"
 	@echo "... dup_ptr"
 	@echo "... forward_list"
@@ -515,6 +553,9 @@ help:
 	@echo "... any.o"
 	@echo "... any.i"
 	@echo "... any.s"
+	@echo "... benchmark.o"
+	@echo "... benchmark.i"
+	@echo "... benchmark.s"
 	@echo "... dequeue.o"
 	@echo "... dequeue.i"
 	@echo "... dequeue.s"
