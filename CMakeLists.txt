@@ -72,6 +72,16 @@ add_executable(benchmark
   benchmark.cpp 
 
 )
+
+add_executable( lock_based_stack
+lock_based_stack.cpp
+)
+
+add_executable( thread_safe_queue
+thread_safe_queue.cpp
+)
+
+
 target_compile_options(benchmark PRIVATE
     $<$<CONFIG:Release>:-O3>
 )
@@ -126,6 +136,16 @@ target_link_libraries(dup_ptr
 )
 
 target_link_libraries(shared_ptr
+    PRIVATE
+        implementation
+)
+
+target_link_libraries(lock_based_stack
+    PRIVATE
+        implementation
+)
+
+target_link_libraries( thread_safe_queue
     PRIVATE
         implementation
 )

@@ -1,0 +1,39 @@
+#include "thread_safe_queue.hpp"
+#include <iostream>
+#include <thread>
+
+ricc::thread_safe_queue<int> a{};
+
+constexpr std::size_t number_of_items = 10;
+
+void produce(){
+
+		for (std::size_t i{}; i < number_of_items ; ++i){
+
+				a.push(i);
+		}
+
+}
+
+void consume(){
+
+		std::size_t  value{};
+		for (std::size_t i{}; i < number_of_items; ++i){
+				int value;
+				a.wait_and_pop(value);
+		}
+		std::cout << "Consumed value " << value <<  std::endl;
+}
+
+
+int main(){
+
+		std::thread t2(consume);
+		std::thread t1(produce);
+		
+
+		t1.join();
+		t2.join();
+
+		return 0;
+}

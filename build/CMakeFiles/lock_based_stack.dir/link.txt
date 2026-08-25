@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/lock_based_stack.dir/link.d CMakeFiles/lock_based_stack.dir/lock_based_stack.cpp.o -o lock_based_stack

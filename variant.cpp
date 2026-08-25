@@ -28,5 +28,6 @@ int main(){
 		assert(ricc::holds_alternative<int>(v3) == 1);
 		assert(ricc::holds_alternative<float>(v3) == 0);
 
+
 		return 0;
 }

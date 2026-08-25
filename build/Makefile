@@ -266,6 +266,32 @@ benchmark/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/benchmark.dir/build.make CMakeFiles/benchmark.dir/build
 .PHONY : benchmark/fast
 
+#=============================================================================
+# Target rules for targets named lock_based_stack
+
+# Build rule for target.
+lock_based_stack: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 lock_based_stack
+.PHONY : lock_based_stack
+
+# fast build rule for target.
+lock_based_stack/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lock_based_stack.dir/build.make CMakeFiles/lock_based_stack.dir/build
+.PHONY : lock_based_stack/fast
+
+#=============================================================================
+# Target rules for targets named thread_safe_queue
+
+# Build rule for target.
+thread_safe_queue: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 thread_safe_queue
+.PHONY : thread_safe_queue
+
+# fast build rule for target.
+thread_safe_queue/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/thread_safe_queue.dir/build.make CMakeFiles/thread_safe_queue.dir/build
+.PHONY : thread_safe_queue/fast
+
 any.o: any.cpp.o
 .PHONY : any.o
 
@@ -410,6 +436,30 @@ list.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/forward_list.dir/build.make CMakeFiles/forward_list.dir/list.cpp.s
 .PHONY : list.cpp.s
 
+lock_based_stack.o: lock_based_stack.cpp.o
+.PHONY : lock_based_stack.o
+
+# target to build an object file
+lock_based_stack.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lock_based_stack.dir/build.make CMakeFiles/lock_based_stack.dir/lock_based_stack.cpp.o
+.PHONY : lock_based_stack.cpp.o
+
+lock_based_stack.i: lock_based_stack.cpp.i
+.PHONY : lock_based_stack.i
+
+# target to preprocess a source file
+lock_based_stack.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lock_based_stack.dir/build.make CMakeFiles/lock_based_stack.dir/lock_based_stack.cpp.i
+.PHONY : lock_based_stack.cpp.i
+
+lock_based_stack.s: lock_based_stack.cpp.s
+.PHONY : lock_based_stack.s
+
+# target to generate assembly for a file
+lock_based_stack.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lock_based_stack.dir/build.make CMakeFiles/lock_based_stack.dir/lock_based_stack.cpp.s
+.PHONY : lock_based_stack.cpp.s
+
 shared_ptr.o: shared_ptr.cpp.o
 .PHONY : shared_ptr.o
 
@@ -457,6 +507,30 @@ string.s: string.cpp.s
 string.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/string.dir/build.make CMakeFiles/string.dir/string.cpp.s
 .PHONY : string.cpp.s
+
+thread_safe_queue.o: thread_safe_queue.cpp.o
+.PHONY : thread_safe_queue.o
+
+# target to build an object file
+thread_safe_queue.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/thread_safe_queue.dir/build.make CMakeFiles/thread_safe_queue.dir/thread_safe_queue.cpp.o
+.PHONY : thread_safe_queue.cpp.o
+
+thread_safe_queue.i: thread_safe_queue.cpp.i
+.PHONY : thread_safe_queue.i
+
+# target to preprocess a source file
+thread_safe_queue.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/thread_safe_queue.dir/build.make CMakeFiles/thread_safe_queue.dir/thread_safe_queue.cpp.i
+.PHONY : thread_safe_queue.cpp.i
+
+thread_safe_queue.s: thread_safe_queue.cpp.s
+.PHONY : thread_safe_queue.s
+
+# target to generate assembly for a file
+thread_safe_queue.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/thread_safe_queue.dir/build.make CMakeFiles/thread_safe_queue.dir/thread_safe_queue.cpp.s
+.PHONY : thread_safe_queue.cpp.s
 
 unique_ptr.o: unique_ptr.cpp.o
 .PHONY : unique_ptr.o
@@ -545,8 +619,10 @@ help:
 	@echo "... dup_ptr"
 	@echo "... forward_list"
 	@echo "... function"
+	@echo "... lock_based_stack"
 	@echo "... shared_ptr"
 	@echo "... string"
+	@echo "... thread_safe_queue"
 	@echo "... unique_ptr"
 	@echo "... variant"
 	@echo "... vector"
@@ -568,12 +644,18 @@ help:
 	@echo "... list.o"
 	@echo "... list.i"
 	@echo "... list.s"
+	@echo "... lock_based_stack.o"
+	@echo "... lock_based_stack.i"
+	@echo "... lock_based_stack.s"
 	@echo "... shared_ptr.o"
 	@echo "... shared_ptr.i"
 	@echo "... shared_ptr.s"
 	@echo "... string.o"
 	@echo "... string.i"
 	@echo "... string.s"
+	@echo "... thread_safe_queue.o"
+	@echo "... thread_safe_queue.i"
+	@echo "... thread_safe_queue.s"
 	@echo "... unique_ptr.o"
 	@echo "... unique_ptr.i"
 	@echo "... unique_ptr.s"

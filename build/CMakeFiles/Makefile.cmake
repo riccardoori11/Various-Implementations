@@ -58,4 +58,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/shared_ptr.dir/DependInfo.cmake"
   "CMakeFiles/dup_ptr.dir/DependInfo.cmake"
   "CMakeFiles/benchmark.dir/DependInfo.cmake"
+  "CMakeFiles/lock_based_stack.dir/DependInfo.cmake"
+  "CMakeFiles/thread_safe_queue.dir/DependInfo.cmake"
   )
