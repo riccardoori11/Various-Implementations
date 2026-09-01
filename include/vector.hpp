@@ -4,6 +4,7 @@
 #include <memory>
 #include <new>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 namespace ricc{
@@ -168,6 +169,16 @@ constexpr void reserve(size_type new_capacity){
 
 		auto new_ptr = mem.get();
 
+		if constexpr (std::is_nothrow_move_constructible_v<T>){
+
+				
+				std::uninitialized_move(new_ptr,new_ptr + size_, data_);
+		}
+		else{
+
+				std::uninitialized_copy(new_ptr,new_ptr + size_, data_);
+		}
+/*
 		for (std::size_t i{}; i < size_; ++i){
 
 				std::construct_at(new_ptr + i,*(data_ + i));
@@ -177,8 +188,9 @@ constexpr void reserve(size_type new_capacity){
 
 				std::destroy_at(data_+ i);
 		}
+		*/
 
-		capacity_ = std::exchange(new_capacity,0);
+		capacity_ = std::move(new_capacity);
 
 		deleter_helper{}(data_);
 
@@ -263,6 +275,26 @@ bool empty() const{
 
 		return size_ == 0;
 }
+
+pointer insert(const_pointer pos, const T& value){
+
+		auto pos_ = const_cast<T*>(pos);
+
+		if (pos_ != begin()){
+
+				size_type space = capacity_ - size_;
+				std::size_t distance = std::distance(begin(), pos);
+
+				auto mem = allocate_helper(distance+1);
+
+				for(std::size_t i{}; i < distance; ++i){
+						std::construct_at(mem.get() + i, data_[i]);
+				}
+
+		}
+
+}
+
 
 reference front(){
 
@@ -363,6 +395,8 @@ friend std::ostream& operator << (std::ostream& output, const Vector& vector){
 		return output;
 		
 }
+
+
 
 };
 

@@ -5,11 +5,13 @@
 /home/riccardo/various_implementations/build/CMakeFiles/forward_list.dir
 /home/riccardo/various_implementations/build/CMakeFiles/function.dir
 /home/riccardo/various_implementations/build/CMakeFiles/variant.dir
+/home/riccardo/various_implementations/build/CMakeFiles/quicksort.dir
 /home/riccardo/various_implementations/build/CMakeFiles/dequeue.dir
 /home/riccardo/various_implementations/build/CMakeFiles/shared_ptr.dir
 /home/riccardo/various_implementations/build/CMakeFiles/dup_ptr.dir
 /home/riccardo/various_implementations/build/CMakeFiles/benchmark.dir
 /home/riccardo/various_implementations/build/CMakeFiles/lock_based_stack.dir
 /home/riccardo/various_implementations/build/CMakeFiles/thread_safe_queue.dir
+/home/riccardo/various_implementations/build/CMakeFiles/accumulate.dir
 /home/riccardo/various_implementations/build/CMakeFiles/edit_cache.dir
 /home/riccardo/various_implementations/build/CMakeFiles/rebuild_cache.dir

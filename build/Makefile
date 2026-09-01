@@ -215,6 +215,19 @@ variant/fast:
 .PHONY : variant/fast
 
 #=============================================================================
+# Target rules for targets named quicksort
+
+# Build rule for target.
+quicksort: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 quicksort
+.PHONY : quicksort
+
+# fast build rule for target.
+quicksort/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quicksort.dir/build.make CMakeFiles/quicksort.dir/build
+.PHONY : quicksort/fast
+
+#=============================================================================
 # Target rules for targets named dequeue
 
 # Build rule for target.
@@ -291,6 +304,43 @@ thread_safe_queue: cmake_check_build_system
 thread_safe_queue/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/thread_safe_queue.dir/build.make CMakeFiles/thread_safe_queue.dir/build
 .PHONY : thread_safe_queue/fast
+
+#=============================================================================
+# Target rules for targets named accumulate
+
+# Build rule for target.
+accumulate: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 accumulate
+.PHONY : accumulate
+
+# fast build rule for target.
+accumulate/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/accumulate.dir/build.make CMakeFiles/accumulate.dir/build
+.PHONY : accumulate/fast
+
+accumulate.o: accumulate.cpp.o
+.PHONY : accumulate.o
+
+# target to build an object file
+accumulate.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/accumulate.dir/build.make CMakeFiles/accumulate.dir/accumulate.cpp.o
+.PHONY : accumulate.cpp.o
+
+accumulate.i: accumulate.cpp.i
+.PHONY : accumulate.i
+
+# target to preprocess a source file
+accumulate.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/accumulate.dir/build.make CMakeFiles/accumulate.dir/accumulate.cpp.i
+.PHONY : accumulate.cpp.i
+
+accumulate.s: accumulate.cpp.s
+.PHONY : accumulate.s
+
+# target to generate assembly for a file
+accumulate.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/accumulate.dir/build.make CMakeFiles/accumulate.dir/accumulate.cpp.s
+.PHONY : accumulate.cpp.s
 
 any.o: any.cpp.o
 .PHONY : any.o
@@ -460,6 +510,30 @@ lock_based_stack.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lock_based_stack.dir/build.make CMakeFiles/lock_based_stack.dir/lock_based_stack.cpp.s
 .PHONY : lock_based_stack.cpp.s
 
+quicksort.o: quicksort.cpp.o
+.PHONY : quicksort.o
+
+# target to build an object file
+quicksort.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quicksort.dir/build.make CMakeFiles/quicksort.dir/quicksort.cpp.o
+.PHONY : quicksort.cpp.o
+
+quicksort.i: quicksort.cpp.i
+.PHONY : quicksort.i
+
+# target to preprocess a source file
+quicksort.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quicksort.dir/build.make CMakeFiles/quicksort.dir/quicksort.cpp.i
+.PHONY : quicksort.cpp.i
+
+quicksort.s: quicksort.cpp.s
+.PHONY : quicksort.s
+
+# target to generate assembly for a file
+quicksort.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/quicksort.dir/build.make CMakeFiles/quicksort.dir/quicksort.cpp.s
+.PHONY : quicksort.cpp.s
+
 shared_ptr.o: shared_ptr.cpp.o
 .PHONY : shared_ptr.o
 
@@ -613,6 +687,7 @@ help:
 	@echo "... codegen"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... accumulate"
 	@echo "... any"
 	@echo "... benchmark"
 	@echo "... dequeue"
@@ -620,12 +695,16 @@ help:
 	@echo "... forward_list"
 	@echo "... function"
 	@echo "... lock_based_stack"
+	@echo "... quicksort"
 	@echo "... shared_ptr"
 	@echo "... string"
 	@echo "... thread_safe_queue"
 	@echo "... unique_ptr"
 	@echo "... variant"
 	@echo "... vector"
+	@echo "... accumulate.o"
+	@echo "... accumulate.i"
+	@echo "... accumulate.s"
 	@echo "... any.o"
 	@echo "... any.i"
 	@echo "... any.s"
@@ -647,6 +726,9 @@ help:
 	@echo "... lock_based_stack.o"
 	@echo "... lock_based_stack.i"
 	@echo "... lock_based_stack.s"
+	@echo "... quicksort.o"
+	@echo "... quicksort.i"
+	@echo "... quicksort.s"
 	@echo "... shared_ptr.o"
 	@echo "... shared_ptr.i"
 	@echo "... shared_ptr.s"

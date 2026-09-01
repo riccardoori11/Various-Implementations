@@ -1,15 +1,12 @@
+#include <cstddef>
 #include <exception>
+#include <optional>
 #include <memory>
 #include <mutex>
 #include <stack>
 
+
 namespace ricc{
-
-struct empty_stack: std::exception{
-
-		const char* what() const throw();
-
-};
 
 template <typename T>
 class lb_stack{
@@ -32,7 +29,7 @@ public:
 
 		lb_stack& operator =(const lb_stack& other) = delete;
 
-		void push(T& new_value){
+		void push(T new_value){
 
 				std::lock_guard<std::mutex> lock(mtx_);
 				data_.push(std::move(new_value));
@@ -45,16 +42,16 @@ public:
 				return data_.empty();
 		}
 
-		std::shared_ptr<T> pop(){
+		std::optional<T> pop(){
 
 				std::lock_guard<std::mutex> lock(mtx_);
 
-				if (empty()){
+				if (data_.empty()){
 
-						throw empty_stack();
+						return std::nullopt;
 				}
 
-				std::shared_ptr<T> const res{std::make_shared<T>(std::move(data_.top()))};
+				auto res = std::move(data_.top());
 
 				data_.pop();
 				return res;
@@ -65,9 +62,9 @@ public:
 
 				std::lock_guard<std::mutex> lock(mtx_);
 
-				if (empty()){
+				if (data_.empty()){
+						return;
 
-						throw empty_stack();
 				}
 
 				value = std::move(data_.top());
@@ -78,5 +75,6 @@ public:
 
 
 };
+
 
 };

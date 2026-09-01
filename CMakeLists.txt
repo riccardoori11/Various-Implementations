@@ -53,6 +53,11 @@ add_executable(variant
 
 )
 
+add_executable(quicksort
+  quicksort.cpp 
+
+)
+
 add_executable(dequeue
   dequeue.cpp 
 
@@ -79,6 +84,10 @@ lock_based_stack.cpp
 
 add_executable( thread_safe_queue
 thread_safe_queue.cpp
+)
+
+add_executable( accumulate
+accumulate.cpp
 )
 
 
@@ -141,6 +150,16 @@ target_link_libraries(shared_ptr
 )
 
 target_link_libraries(lock_based_stack
+    PRIVATE
+        implementation
+)
+
+target_link_libraries(quicksort
+    PRIVATE
+        implementation
+)
+
+target_link_libraries(accumulate
     PRIVATE
         implementation
 )

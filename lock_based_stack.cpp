@@ -1,4 +1,4 @@
-#include "lock_based_stack.hpp"
+#include "thread_based_stack.hpp"
 #include <thread>
 
 void add_to_stack(ricc::lb_stack<int> stack){
