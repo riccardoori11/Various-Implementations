@@ -18,6 +18,7 @@ CMakeFiles/any.dir/any.cpp.o
  /usr/include/asm/types.h
  /usr/include/asm/unistd.h
  /usr/include/asm/unistd_64.h
+ /usr/include/assert.h
  /usr/include/bits/atomic_wide_counter.h
  /usr/include/bits/byteswap.h
  /usr/include/bits/confname.h
@@ -173,6 +174,7 @@ CMakeFiles/any.dir/any.cpp.o
  /usr/include/c++/15/bits/uses_allocator_args.h
  /usr/include/c++/15/bits/utility.h
  /usr/include/c++/15/bits/version.h
+ /usr/include/c++/15/cassert
  /usr/include/c++/15/cctype
  /usr/include/c++/15/cerrno
  /usr/include/c++/15/climits
