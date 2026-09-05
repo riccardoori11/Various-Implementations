@@ -90,6 +90,10 @@ add_executable( accumulate
 accumulate.cpp
 )
 
+add_executable( array
+array.cpp
+)
+
 
 target_compile_options(benchmark PRIVATE
     $<$<CONFIG:Release>:-O3>
@@ -155,6 +159,11 @@ target_link_libraries(lock_based_stack
 )
 
 target_link_libraries(quicksort
+    PRIVATE
+        implementation
+)
+
+target_link_libraries(array
     PRIVATE
         implementation
 )

@@ -1,5 +1,6 @@
 #include "accumulate.hpp"
 #include "vector.hpp"
+#include <cassert>
 
 int main(){
 
@@ -7,7 +8,9 @@ int main(){
 
 		auto rst = ricc::parallel_accumulate(a.begin(),a.end(),0);
 
-		std::cout << rst << std::endl;
+		auto rst1 = ricc::parallel_accumulatePackaged_task(a.begin(),a.end(),0);
+
+		assert(rst == rst1);
 
 		return 0;
 }

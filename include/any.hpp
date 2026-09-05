@@ -7,7 +7,38 @@
 #include <array>
 #include <typeinfo>
 
+
+
 namespace ricc{
+
+struct Tracker{
+
+		inline static std::size_t alive {};
+		inline static std::size_t dead{};
+
+		int n{};
+
+		Tracker(int n):n(n){
+				++alive;
+		}
+		Tracker(const Tracker& other){
+
+				++alive;
+		}
+
+		Tracker(Tracker&& other){
+
+				++alive;
+		}
+
+		~Tracker(){
+
+				alive--;
+				dead++;
+		}
+
+
+};
 
 class any{
 
@@ -22,6 +53,7 @@ struct operations{
 
 		void* (*copy)(void*, const void*);
 		void* (*move)(void*, void*);
+		void (*destructor)(void* ptr);
 
 };
 
@@ -39,6 +71,21 @@ sbo;
 void* data_;
 
 template<typename T>
+static void delete_type(void* ptr){
+
+		using T_NORM = std::decay<T>;
+
+		if constexpr (is_small<T_NORM>) {
+				std::destroy_at(static_cast<T*>(ptr));
+		}
+		else{
+
+				delete static_cast<T*>(ptr);
+		}
+
+}
+
+template<typename T>
 static void* copy_type(void* destination, const void* source){
 
 		using T_NORM = std::decay_t<T>;
@@ -51,7 +98,6 @@ static void* copy_type(void* destination, const void* source){
 				return std::construct_at(T_destination, *T_src);
 		}
 		else{
-				std::cout << "Heap allocated!!!!" << std::endl;
 				return new T(*T_src);
 		}
 }
@@ -85,7 +131,8 @@ template<typename T>
 constexpr static operations op{
 
 		&copy_type<T>,
-		&move_type<T>
+		&move_type<T>,
+		&delete_type<T>
 };
 
 const std::type_info* type_;
@@ -120,9 +167,17 @@ any(T object){
 
 }
 
+~any(){
+
+		if (data_ != nullptr){
+				oper->destructor(data_);
+		}
+		
+		
+}
+
 any(const any& other):oper(other.oper){	
 
-		std::cout << "Copied " << std::endl;
 
 		data_ = oper->copy(
 
@@ -136,7 +191,6 @@ any(const any& other):oper(other.oper){
 
 any (any&& other): oper(std::exchange(other.oper,nullptr)),type_(std::exchange(other.type_, nullptr)){
 
-		std::cout << "Move" << std::endl;
 
 		data_ = oper->move(
 
@@ -162,6 +216,23 @@ T& any_cast(){
 		return *reinterpret_cast<T_NORM*>(data_);
 }
 
+void reset() noexcept{
+
+
+
+};
+
+bool has_value() const noexcept {
+
+		if (data_){
+		
+				return true;
+		}
+		else{
+
+				return false;
+		}
+}
 
 };
 }

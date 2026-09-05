@@ -318,6 +318,19 @@ accumulate/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/accumulate.dir/build.make CMakeFiles/accumulate.dir/build
 .PHONY : accumulate/fast
 
+#=============================================================================
+# Target rules for targets named array
+
+# Build rule for target.
+array: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 array
+.PHONY : array
+
+# fast build rule for target.
+array/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/array.dir/build.make CMakeFiles/array.dir/build
+.PHONY : array/fast
+
 accumulate.o: accumulate.cpp.o
 .PHONY : accumulate.o
 
@@ -365,6 +378,30 @@ any.s: any.cpp.s
 any.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/any.dir/build.make CMakeFiles/any.dir/any.cpp.s
 .PHONY : any.cpp.s
+
+array.o: array.cpp.o
+.PHONY : array.o
+
+# target to build an object file
+array.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/array.dir/build.make CMakeFiles/array.dir/array.cpp.o
+.PHONY : array.cpp.o
+
+array.i: array.cpp.i
+.PHONY : array.i
+
+# target to preprocess a source file
+array.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/array.dir/build.make CMakeFiles/array.dir/array.cpp.i
+.PHONY : array.cpp.i
+
+array.s: array.cpp.s
+.PHONY : array.s
+
+# target to generate assembly for a file
+array.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/array.dir/build.make CMakeFiles/array.dir/array.cpp.s
+.PHONY : array.cpp.s
 
 benchmark.o: benchmark.cpp.o
 .PHONY : benchmark.o
@@ -689,6 +726,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... accumulate"
 	@echo "... any"
+	@echo "... array"
 	@echo "... benchmark"
 	@echo "... dequeue"
 	@echo "... dup_ptr"
@@ -708,6 +746,9 @@ help:
 	@echo "... any.o"
 	@echo "... any.i"
 	@echo "... any.s"
+	@echo "... array.o"
+	@echo "... array.i"
+	@echo "... array.s"
 	@echo "... benchmark.o"
 	@echo "... benchmark.i"
 	@echo "... benchmark.s"

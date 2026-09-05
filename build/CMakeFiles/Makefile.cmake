@@ -62,4 +62,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/lock_based_stack.dir/DependInfo.cmake"
   "CMakeFiles/thread_safe_queue.dir/DependInfo.cmake"
   "CMakeFiles/accumulate.dir/DependInfo.cmake"
+  "CMakeFiles/array.dir/DependInfo.cmake"
   )

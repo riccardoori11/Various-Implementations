@@ -13,5 +13,6 @@
 /home/riccardo/various_implementations/build/CMakeFiles/lock_based_stack.dir
 /home/riccardo/various_implementations/build/CMakeFiles/thread_safe_queue.dir
 /home/riccardo/various_implementations/build/CMakeFiles/accumulate.dir
+/home/riccardo/various_implementations/build/CMakeFiles/array.dir
 /home/riccardo/various_implementations/build/CMakeFiles/edit_cache.dir
 /home/riccardo/various_implementations/build/CMakeFiles/rebuild_cache.dir

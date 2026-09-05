@@ -403,4 +403,5 @@ friend std::ostream& operator << (std::ostream& output, const Vector& vector){
 
 
 
+
 }
