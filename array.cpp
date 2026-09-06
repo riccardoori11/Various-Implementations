@@ -9,7 +9,7 @@ int main(){
 		a = b;
 
 		ricc::Array<int, 5> c {std::move(a)};
-		ricc::Array<int, 2> d{9,9};
+		ricc::Array<int, 5> d{9,9};
 
 		c = d;
 

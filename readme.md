@@ -16,4 +16,4 @@ As opposed to std::vector, the elements of a deque are not stored contiguously: 
 
 Has higher minimal memory cost than a vector 
 
-
+https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p0447r28.html?utm_source=chatgpt.com#introduction
