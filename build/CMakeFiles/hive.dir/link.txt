@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/hive.dir/link.d CMakeFiles/hive.dir/hive.cpp.o -o hive

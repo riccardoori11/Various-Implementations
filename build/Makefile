@@ -137,6 +137,19 @@ vector/fast:
 .PHONY : vector/fast
 
 #=============================================================================
+# Target rules for targets named hive
+
+# Build rule for target.
+hive: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 hive
+.PHONY : hive
+
+# fast build rule for target.
+hive/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hive.dir/build.make CMakeFiles/hive.dir/build
+.PHONY : hive/fast
+
+#=============================================================================
 # Target rules for targets named string
 
 # Build rule for target.
@@ -499,6 +512,30 @@ function.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/function.dir/build.make CMakeFiles/function.dir/function.cpp.s
 .PHONY : function.cpp.s
 
+hive.o: hive.cpp.o
+.PHONY : hive.o
+
+# target to build an object file
+hive.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hive.dir/build.make CMakeFiles/hive.dir/hive.cpp.o
+.PHONY : hive.cpp.o
+
+hive.i: hive.cpp.i
+.PHONY : hive.i
+
+# target to preprocess a source file
+hive.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hive.dir/build.make CMakeFiles/hive.dir/hive.cpp.i
+.PHONY : hive.cpp.i
+
+hive.s: hive.cpp.s
+.PHONY : hive.s
+
+# target to generate assembly for a file
+hive.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hive.dir/build.make CMakeFiles/hive.dir/hive.cpp.s
+.PHONY : hive.cpp.s
+
 list.o: list.cpp.o
 .PHONY : list.o
 
@@ -732,6 +769,7 @@ help:
 	@echo "... dup_ptr"
 	@echo "... forward_list"
 	@echo "... function"
+	@echo "... hive"
 	@echo "... lock_based_stack"
 	@echo "... quicksort"
 	@echo "... shared_ptr"
@@ -761,6 +799,9 @@ help:
 	@echo "... function.o"
 	@echo "... function.i"
 	@echo "... function.s"
+	@echo "... hive.o"
+	@echo "... hive.i"
+	@echo "... hive.s"
 	@echo "... list.o"
 	@echo "... list.i"
 	@echo "... list.s"

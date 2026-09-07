@@ -23,6 +23,11 @@ add_executable(vector
 
 )
 
+add_executable(hive
+  hive.cpp 
+
+)
+
 add_executable(string
   string.cpp 
 
@@ -174,6 +179,12 @@ target_link_libraries(accumulate
 )
 
 target_link_libraries( thread_safe_queue
+    PRIVATE
+        implementation
+)
+
+
+target_link_libraries( hive
     PRIVATE
         implementation
 )
