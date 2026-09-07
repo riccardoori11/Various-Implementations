@@ -19,9 +19,4 @@ Has higher minimal memory cost than a vector
 https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p0447r28.html?utm_source=chatgpt.com#introduction
 
 
-The three core aspects of a hive from an abstract perspective are:
 
-    A collection of element blocks + metadata, to prevent reallocation during insertion (as opposed to a single element block).
-    A method of skipping erased elements in O(1) time during iteration (as opposed to reallocating subsequent elements during erasure).
-    An erased-element location recording mechanism, to enable the re-use of memory from erased elements in subsequent insertions, which in turn increases cache locality and reduces the number of block allocations/deallocations.
-https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p0447r28.html?utm_source=chatgpt.com
