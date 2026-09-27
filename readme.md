@@ -19,4 +19,8 @@ Has higher minimal memory cost than a vector
 https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2024/p0447r28.html?utm_source=chatgpt.com#introduction
 
 
+https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p0447r15.html
+
+A hive uses a non-boolean method for skipping erased elements, which allows for O(1) amortized iteration time complexity and more-predictable iteration performance than a bucket array. It also utilizes a growth factor for memory blocks and reuses erased element locations upon insertion, which leads to fewer allocations/reallocations. Because it reuses erased element memory space, the exact location of insertion is undefined, unless no erasures have occurred or an equal number of erasures and insertions have occurred (in which case the insertion location is the back of the container). The container is therefore considered unordered but sortable. Lastly, because there is no way of predicting in advance where erasures ('skips') may occur during iteration, an O(1) time complexity [ ] operator is not necessarily possible (depending on implementation) and therefore, the container is bidirectional but not random-access.
+https://plflib.org/matt_bentley_-_the_low_complexity_jump-counting_pattern.pdf
 

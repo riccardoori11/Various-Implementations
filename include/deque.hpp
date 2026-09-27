@@ -28,7 +28,8 @@ struct block_deleter{
 		void operator()(T* ptr) noexcept {
 
 				::operator delete(ptr,std::align_val_t(alignof(T)));
-		}};
+		}
+};
 
 
 
