@@ -39,8 +39,9 @@ class Fixed_sized_hive{
 
 
 						std::size_t run = 0;
-						for (std::size_t i = used; i> 0;--i){
-								if (skip[i] == 1){
+						for (std::size_t i = used; i> 0;){
+								--i;
+								if (skip[i] != 0){
 										skip[i] = ++run;
 								}
 								else{
@@ -57,42 +58,6 @@ class Fixed_sized_hive{
 
 				return i < ptr->used && ptr->skip == 0;
 		}
-
-		
-		class iterator{
-
-				Group* g;
-				// used to indicate offset for elements and skipfield
-				// May be worse for performance but is easier to implement for now
-				std::size_t index;
-				void skip(){
-						
-						if (index < g->used){
-
-								index += g->skip;
-						}
-
-						if (index >= g->used){
-								std::cout << "No more live elements ahead" << std::endl;
-						}
-				}
-
-				T& operator*(){
-						return g->elements[index].value;
-				}
-
-				iterator& operator++ (){
-						++index;
-						skip();
-						return *this;
-				}
-
-		};
-
-		
-
-
-
 public:
 
 		Fixed_sized_hive() = default;
@@ -103,7 +68,37 @@ public:
 
 		Fixed_sized_hive ( Fixed_sized_hive&& other) = delete;
 		Fixed_sized_hive& operator = ( Fixed_sized_hive&& other) = delete;
+		struct iterator{
 
+				Group* g;
+				// used to indicate offset for elements and skipfield
+				// May be worse for performance but is easier to implement for now
+				std::size_t index;
+				void skip(){
+						
+						if (index < g->used){
+
+								index += g->skip[index];
+						}
+
+						if (index >= g->used){
+								return;
+						}
+				}
+
+				T& operator*(){
+						return g->elements[index].object;
+				}
+
+				iterator& operator++ (){
+						++index;
+						skip();
+						return *this;
+				}
+
+				bool operator ==(const iterator& other) const = default;
+
+		};
 		
 		iterator begin(){
 
@@ -112,7 +107,12 @@ public:
 				it.skip();
 
 				return it;
-				
+		
+		}
+
+		iterator end(){
+
+				return {ptr.get(),ptr->used};
 		}
 
 		// in this fixed size version there are 2 possible cases for insertion:
@@ -141,12 +141,17 @@ public:
 		}
 
 		// three cases to think about 
-		// First one being
 		void erase(iterator it){
 
+				Group* g = ptr.get();
+				auto i = it.index;
+
+				g->elements[i].next_free = g->free_listHead;
+				g->free_listHead = i;
+				g->skip[i] = 1;
+				g->rebuild_skip();
 
 		}
 
-		 
 };
 };
