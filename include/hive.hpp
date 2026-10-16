@@ -140,7 +140,6 @@ public:
 				return {g,empty_slot};
 		}
 
-		// three cases to think about 
 		void erase(iterator it){
 
 				Group* g = ptr.get();
