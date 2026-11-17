@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 3.20)
 
 project(implementation LANGUAGES CXX)
 
@@ -203,3 +203,38 @@ target_link_libraries( hive
 #$<$<CONFIG:Debug>:-fsanitize=address,undefined>
 #)
 
+
+
+# ---------------------------------------------------------------------------
+# Tests (Catch2) — built with warnings and sanitizers enabled
+# ---------------------------------------------------------------------------
+option(ENABLE_SANITIZERS "Build tests with AddressSanitizer + UBSan" ON)
+
+include(FetchContent)
+FetchContent_Declare(Catch2
+    URL https://github.com/catchorg/Catch2/archive/refs/tags/v3.7.1.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(Catch2)
+
+enable_testing()
+
+add_executable(tests
+    tests/test_vector.cpp
+)
+
+target_link_libraries(tests
+    PRIVATE
+        implementation
+        Catch2::Catch2WithMain
+)
+
+target_compile_options(tests PRIVATE -Wall -Wextra -Wpedantic)
+
+if(ENABLE_SANITIZERS)
+    target_compile_options(tests PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -g)
+    target_link_options(tests PRIVATE -fsanitize=address,undefined)
+endif()
+
+include(Catch)
+catch_discover_tests(tests)
