@@ -1,3 +1,4 @@
+#pragma once
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
@@ -41,7 +42,7 @@ struct deleter_helper{
 using vector_ptr = std::unique_ptr<T,deleter_helper>;
 
 vector_ptr allocate_helper(std::size_t new_capacity){
-		auto mem = ::operator new(sizeof(T) * new_capacity);
+		auto mem = ::operator new(sizeof(T) * new_capacity,std::align_val_t(alignof(T)));
 		return vector_ptr(static_cast<T*>(mem));
 
 }
@@ -61,17 +62,14 @@ Vector (size_type n, const_reference init):capacity_(n),size_(n)
 		
 }
 
-Vector(std::initializer_list<T> lst)
+Vector(const std::initializer_list<T>& lst)
 {
 		auto mem = allocate_helper(lst.size());
-
 		try{
-				for (auto value: lst){
-
+				for (const auto& value: lst){
 						std::construct_at(mem.get() + size_, value);
 						++size_;
 				}
-
 		}
 		catch(...){
 				while (size_ != 0){
@@ -80,8 +78,9 @@ Vector(std::initializer_list<T> lst)
 				}
 				throw;
 		}
-
 		data_ = mem.release();
+		size_  = lst.size();
+		capacity_ = size_;
 }
 
 
@@ -90,39 +89,30 @@ Vector(std::initializer_list<T> lst)
 		for (std::size_t i{}; i < size_; ++i){
 				std::destroy_at(data_ + i);
 		}
+
+		deleter_helper{}(data_);
 }
 
 
 // copy constructor
 constexpr Vector(const Vector& other):capacity_{other.capacity_}
 {
-		
 		auto mem = allocate_helper(capacity_);
 		T* destination = mem.get();
 try{
 		for (; size_< other.size_; ++size_){
 				std::construct_at(mem.get() + size_,*(other.data_ + size_));
 		}
-
 }
 catch(...){
-
 		while (size_ != 0){
-
 				--size_;
 				std::destroy_at(mem.get() + size_);
 		}
-
 		throw;
-
 }
-
 		data_ = mem.release();
-		
 }
-
-
-
 
 void swap(Vector& other){
 
@@ -149,34 +139,22 @@ constexpr Vector(Vector && other) noexcept:
 // move assignment
 constexpr Vector& operator=(Vector&& other) noexcept
 {
-
 		Vector (std::move(other)).swap(*this);
-
 		return *this;
-
 }
 
-//copies the old elements into the new storage
-// using this as temporary helper allocate function
-constexpr void reserve(size_type new_capacity){
+private:
 
-		if (new_capacity <= capacity_){
-
-				throw std::bad_array_new_length();
-		}
-
+// moves the elements into a new buffer of exactly new_capacity
+// (used by both reserve and shrink_to_fit)
+constexpr void reallocate(size_type new_capacity){
 		auto mem = allocate_helper(new_capacity);
-
 		auto new_ptr = mem.get();
-
 		if constexpr (std::is_nothrow_move_constructible_v<T>){
-
-				
-				std::uninitialized_move(new_ptr,new_ptr + size_, data_);
+				std::uninitialized_move(data_, data_ + size_, new_ptr);
 		}
 		else{
-
-				std::uninitialized_copy(new_ptr,new_ptr + size_, data_);
+				std::uninitialized_copy(data_, data_ + size_, new_ptr);
 		}
 /*
 		for (std::size_t i{}; i < size_; ++i){
@@ -189,23 +167,29 @@ constexpr void reserve(size_type new_capacity){
 				std::destroy_at(data_+ i);
 		}
 		*/
-
 		capacity_ = std::move(new_capacity);
-
 		deleter_helper{}(data_);
-
 		data_ = mem.release();
+}
 
+public:
+
+// only ever grows the capacity; does nothing if it is already big enough
+constexpr void reserve(size_type new_capacity){
+		if (new_capacity <= capacity_){
+				return;
+		}
+		reallocate(new_capacity);
 }
 
 
  void push_back(T&& value){
 
 		if (size_ == capacity_){
-
 				std::size_t new_capacity = (size_ == 0) ? 1: capacity_*growth_factor;
 				reserve(new_capacity);
 		}
+		
 		std::construct_at(data_ + size_,std::move(value));
 		++size_;
 }
@@ -250,7 +234,7 @@ constexpr reference emplace_back(Args&&... args){
 		std::construct_at(data_ + size_, std::forward<Args>(args)...);
 		size_++;
 
-		return *(data_+ size_);
+		return *(data_+ size_ - 1);
 }
 
 size_type size() const{
@@ -347,13 +331,12 @@ constexpr void pop_back(){
 
 constexpr void shrink_to_fit(){
 
-
 		if (capacity_ == size_){
 
 				return;
 		}
 
-		reserve(size_);
+		reallocate(size_);
 
 
 }

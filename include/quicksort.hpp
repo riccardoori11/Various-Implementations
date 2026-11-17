@@ -1,3 +1,4 @@
+#pragma once
 #include <algorithm>
 #include <optional>
 #include "thread_based_stack.hpp"

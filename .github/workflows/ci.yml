@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [g++, clang++]
+    name: tests (${{ matrix.compiler }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t stl-tests --build-arg CXX_COMPILER=${{ matrix.compiler }} .
+
+      - name: Run tests
+        run: docker run --rm stl-tests

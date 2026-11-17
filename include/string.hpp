@@ -1,3 +1,4 @@
+#pragma once
 	/*
 	 *
 		 * sizeof(std::string) gives me 32 bytes
