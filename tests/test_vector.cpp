@@ -14,6 +14,7 @@ TEST_CASE("default-constructed Vector is empty", "[vector]") {
     REQUIRE(v.capacity() == 0);
 }
 
+
 TEST_CASE("initializer list with front and back", "[vector]") {
     ricc::Vector<int> v{1, 23, 4, 44444};
     REQUIRE(v.size() == 4);
