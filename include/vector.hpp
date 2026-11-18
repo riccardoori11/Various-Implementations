@@ -53,13 +53,11 @@ public:
 
 Vector() = default;
 
-Vector (size_type n, const_reference init):capacity_(n),size_(n)
+Vector (const size_type n, const_reference init):capacity_(n),size_(n)
 {
-
 				auto mem = allocate_helper(capacity_);
-				std::uninitialized_fill(mem.get(),n,init);
+				std::uninitialized_fill(mem.get(),mem.get() + n,init);
 				data_ = mem.release();
-		
 }
 
 Vector(const std::initializer_list<T>& lst)
@@ -188,24 +186,12 @@ constexpr void reserve(size_type new_capacity){
 
  void push_back(T&& value){
 
-		if (size_ == capacity_){
-				std::size_t new_capacity = (size_ == 0) ? 1: capacity_*growth_factor;
-				reserve(new_capacity);
-		}
-		
-		std::construct_at(data_ + size_,std::move(value));
-		++size_;
+		 emplace_back(std::move(value));
 }
 
  void push_back(const_reference value){
 
-		if (size_ == capacity_){
-
-				std::size_t new_capacity = (size_ == 0) ? 1: capacity_*growth_factor;
-				reserve(new_capacity);
-		}
-		std::construct_at(data_ + size_,value);
-		++size_;
+		 emplace_back(value);
 }
 
 /*
@@ -227,17 +213,43 @@ void emplace_back(Args&&... args){
 */
 template <typename... Args>
 constexpr reference emplace_back(Args&&... args){
-
-		if (size_ == capacity_){
-
-				std::size_t new_capacity = (size_ == 0) ? 1: capacity_ * growth_factor;
-				reserve(new_capacity);
+		if (size_ < capacity_){
+				// fast path
+				std::construct_at(data_ + size_, std::forward<Args>(args)...);
+				size_++;
+				return *(data_+ size_ - 1);
 		}
+		else{
+				/*slow path*/
+				std::size_t new_cap = (size_ == 0) ? 1: capacity_ * growth_factor; 
+				auto mem = allocate_helper(new_cap);
+				T* new_ptr = mem.get();
 
-		std::construct_at(data_ + size_, std::forward<Args>(args)...);
-		size_++;
+				//creating the new element first
+				//
+				std::construct_at(new_ptr + size_, std::forward<Args>(args)...);
 
-		return *(data_+ size_ - 1);
+				try{
+						if constexpr (std::is_nothrow_move_constructible_v<T>) {
+								std::uninitialized_move(data_, data_+size_, new_ptr);
+						}	
+						else{
+								std::uninitialized_copy(data_, data_+size_, new_ptr);
+						}
+				}
+				catch(...){
+						std::destroy_at(new_ptr + size_);
+						throw;
+				}
+
+				std::destroy(data_, data_ + size_);
+				size_++;
+				capacity_ = new_cap;
+				deleter_helper{}(data_);
+				data_ = mem.release();
+				return *(data_ + size_ -1);
+		}
+		
 }
 
 size_type size() const{
@@ -264,22 +276,6 @@ bool empty() const{
 }
 
 pointer insert(const_pointer pos, const T& value){
-
-		auto pos_ = const_cast<T*>(pos);
-
-		if (pos_ != begin()){
-
-				size_type space = capacity_ - size_;
-				std::size_t distance = std::distance(begin(), pos);
-
-				auto mem = allocate_helper(distance+1);
-
-				for(std::size_t i{}; i < distance; ++i){
-						std::construct_at(mem.get() + i, data_[i]);
-				}
-
-		}
-
 }
 
 
@@ -345,12 +341,9 @@ constexpr void shrink_to_fit(){
 }
 
 constexpr reference at(const std::size_t pos) {
-
 		if (pos >= size_){
-
 				throw std::out_of_range("Position not valid");
 		}
-
 		return data_[pos];
 }
 
