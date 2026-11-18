@@ -25,6 +25,14 @@ A hive uses a non-boolean method for skipping erased elements, which allows for 
 https://plflib.org/matt_bentley_-_the_low_complexity_jump-counting_pattern.pdf
 
 
-cmake --build build && ctest --test-dir build --output-on-failure
 docker build -t stl-tests . && docker run --rm stl-tests
+
+cmake --build build
+If that says build isn't configured, or complains about the old folder, set it up once first:
+rm -rf build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+
+Run all tests:
+ctest --test-dir build --output-on-failure
 

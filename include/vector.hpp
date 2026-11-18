@@ -73,13 +73,12 @@ Vector(const std::initializer_list<T>& lst)
 		}
 		catch(...){
 				while (size_ != 0){
-						std::destroy_at(mem.get() + size_);
 						--size_;
+						std::destroy_at(mem.get() + size_);
 				}
 				throw;
 		}
 		data_ = mem.release();
-		size_  = lst.size();
 		capacity_ = size_;
 }
 
@@ -167,6 +166,10 @@ constexpr void reallocate(size_type new_capacity){
 				std::destroy_at(data_+ i);
 		}
 		*/
+
+		for (std::size_t i{}; i < size_; ++i){
+				std::destroy_at(data_ + i);
+		}
 		capacity_ = std::move(new_capacity);
 		deleter_helper{}(data_);
 		data_ = mem.release();
@@ -341,7 +344,7 @@ constexpr void shrink_to_fit(){
 
 }
 
-constexpr const_reference at(const std::size_t pos) {
+constexpr reference at(const std::size_t pos) {
 
 		if (pos >= size_){
 
@@ -351,7 +354,7 @@ constexpr const_reference at(const std::size_t pos) {
 		return data_[pos];
 }
 
-constexpr reference at(std::size_t pos) const{
+constexpr const_reference at(std::size_t pos) const{
 
 		if (pos >= size_){
 
