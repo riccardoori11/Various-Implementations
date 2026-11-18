@@ -27,11 +27,19 @@ struct Tracked {
 // Same idea, but with a noexcept move constructor, so Vector uses its move path.
 struct TrackedMovable {
     static inline int alive = 0;
+    static inline int copies = 0;
+    static inline int moves = 0;
     int value;
 
     TrackedMovable(int v = 0) : value(v) { ++alive; }
-    TrackedMovable(const TrackedMovable& other) : value(other.value) { ++alive; }
-    TrackedMovable(TrackedMovable&& other) noexcept : value(other.value) { ++alive; }
+    TrackedMovable(const TrackedMovable& other) : value(other.value) {
+        ++alive;
+        ++copies;
+    }
+    TrackedMovable(TrackedMovable&& other) noexcept : value(other.value) {
+        ++alive;
+        ++moves;
+    }
     TrackedMovable& operator=(const TrackedMovable&) = default;
     ~TrackedMovable() { --alive; }
 };
@@ -105,6 +113,31 @@ TEST_CASE("push_back works with non-trivial types", "[vector]") {
     REQUIRE(v.size() == 20);
     REQUIRE(v[0] == std::string(30, 'a'));
     REQUIRE(v[19] == std::string(30, 't'));
+}
+
+TEST_CASE("appending an existing string preserves both values during growth", "[vector][append]") {
+    const std::string original = "first element";
+    ricc::Vector<std::string> v{original};
+    while (v.size() < v.capacity()) {
+        v.emplace_back("filler");
+    }
+    const auto old_size = v.size();
+
+    SECTION("push_back") {
+        v.push_back(v.front());
+        REQUIRE(v.front() == original);
+    }
+    SECTION("emplace_back") {
+        v.emplace_back(v.front());
+        REQUIRE(v.front() == original);
+    }
+    SECTION("push_back with move") {
+        v.push_back(std::move(v.front()));
+        // front() is now moved-from (unspecified state), so only back() is checked
+    }
+
+    REQUIRE(v.size() == old_size + 1);
+    REQUIRE(v.back() == original);
 }
 
 TEST_CASE("copy constructor and copy assignment", "[vector]") {
@@ -209,6 +242,12 @@ TEST_CASE("reallocation destroys moved-from elements (move path)", "[vector][lif
         for (int i = 0; i < 10; ++i) {
             v.push_back(TrackedMovable{i});
         }
+        TrackedMovable::moves = 0;
+        TrackedMovable::copies = 0;
+        v.reserve(v.capacity() + 1);
+
+        REQUIRE(TrackedMovable::moves == 10);
+        REQUIRE(TrackedMovable::copies == 0);
         REQUIRE(TrackedMovable::alive == 10);
         REQUIRE(v[9].value == 9);
     }
@@ -320,7 +359,7 @@ TEST_CASE("shrink_to_fit on an empty vector", "[vector][capacity]") {
     REQUIRE(v.empty());
 }
 
-TEST_CASE("emplace_back reference stays valid after reallocation", "[vector]") {
+TEST_CASE("emplace_back returns a reference to back() when the vector grows", "[vector]") {
     ricc::Vector<std::string> v;
     for (int i = 0; i < 5; ++i) {
         std::string& s = v.emplace_back(40, static_cast<char>('a' + i));  // forces reallocations
