@@ -358,3 +358,37 @@ TEST_CASE("at() on a const vector returns a const reference", "[vector][const]")
     REQUIRE(v.at(1) == 2);
     REQUIRE(std::is_same_v<decltype(v.at(0)), const int&>);
 }
+
+// ---------------------------------------------------------------------------
+// Fill constructor: Vector(n, value)
+// (note: use parentheses — braces would pick the initializer-list constructor)
+// ---------------------------------------------------------------------------
+
+TEST_CASE("fill constructor", "[vector][fill]") {
+    ricc::Vector<int> v(5, 7);
+    REQUIRE(v.size() == 5);
+    REQUIRE(v.capacity() >= 5);
+    for (std::size_t i = 0; i < v.size(); ++i) {
+        REQUIRE(v[i] == 7);
+    }
+}
+
+TEST_CASE("fill constructor with zero elements", "[vector][fill]") {
+    ricc::Vector<std::string> v(0, "x");
+    REQUIRE(v.empty());
+}
+
+TEST_CASE("fill constructor cleans up if a copy throws", "[vector][fill][exceptions]") {
+    ThrowOnCopy::reset();
+    {
+        ThrowOnCopy proto;
+        const auto before = ThrowOnCopy::live.size();
+
+        ThrowOnCopy::copies_until_throw = 3;  // 4th copy throws
+        REQUIRE_THROWS_AS(ricc::Vector<ThrowOnCopy>(5, proto), std::runtime_error);
+        ThrowOnCopy::copies_until_throw = -1;
+
+        REQUIRE(ThrowOnCopy::bad_destroys == 0);
+        REQUIRE(ThrowOnCopy::live.size() == before);
+    }
+}

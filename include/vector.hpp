@@ -53,13 +53,11 @@ public:
 
 Vector() = default;
 
-Vector (size_type n, const_reference init):capacity_(n),size_(n)
+Vector (const size_type n, const_reference init):capacity_(n),size_(n)
 {
-
 				auto mem = allocate_helper(capacity_);
-				std::uninitialized_fill(mem.get(),n,init);
+				std::uninitialized_fill(mem.get(),mem.get() + n,init);
 				data_ = mem.release();
-		
 }
 
 Vector(const std::initializer_list<T>& lst)
