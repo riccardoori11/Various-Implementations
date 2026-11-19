@@ -4,6 +4,7 @@
 		 * sizeof(std::string) gives me 32 bytes
 		 * */
 
+#include <algorithm>
 #include <array>
 #include <ios>
 #include <ostream>
@@ -68,11 +69,9 @@ auto& getLongString() {
 std::size_t size_{};
 
 auto helper_allocate(std::size_t new_capacity){
-
 		return static_cast<char*>(::operator new(new_capacity+1));
 }
 auto deallocate(char* ptr){
-
 		::operator delete(ptr);
 }
 
@@ -95,13 +94,10 @@ void copy_to_heap(){
 		char* ptr = helper_allocate(new_capacity);
 
 		for (std::size_t i{}; i < size_; ++i){
-
 				std::construct_at(ptr + i,small.buffer[i]);
 		}
 		std::construct_at(ptr + size_, '\0');
-
 		data_.emplace<long_string>(long_string(ptr,new_capacity));
-
 }
 
 
@@ -220,47 +216,42 @@ char& front(){
 		}
 }
 
-void pushBack(char ch){
-
+void pushBack(const char& ch){
 		if (is_short()){
-
 				auto& it = getShortString();
 				if (size_ < it.MAX){
 						it.buffer[size_++] = ch;
 						it.buffer[size_] = '\0';
+						return;
 				}
-				
 				copy_to_heap();
 		}
-		else{
-
 				auto& long_sso = getLongString();
-
+				if (long_sso.capacity_ == size_){
+						/*char has no constructor, so we can simply copy*/
+						std::size_t new_cap = std::max<std::size_t>(1, long_sso.capacity_ * gf);
+						auto* new_ptr = helper_allocate(new_cap);
+						std::copy(long_sso.ptr, long_sso.ptr+ size_, new_ptr);
+						deallocate(long_sso.ptr);
+						long_sso.ptr = new_ptr;
+						long_sso.capacity_ = new_cap;
+				}
 				*(long_sso.ptr + size_) = ch;
-		}
-
-		++size_;
-
+				++size_;
+				long_sso.ptr[size_] = '\0';
 }
 char& operator[](std::size_t idx){
-
 		if (idx >= size_){
-
 				throw std::out_of_range("idx too big");
 		}
 		if (is_short()){
-
 			auto& it = getShortString();
 				return it.buffer[idx];
-
 		}
-
 		else{
-
 				auto& it = getLongString();
 				return *(it.ptr + idx);
 		}
-
 }
 
 const char& operator[](std::size_t idx) const {

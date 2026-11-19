@@ -220,6 +220,7 @@ FetchContent_MakeAvailable(Catch2)
 enable_testing()
 
 add_executable(tests
+    tests/test_string.cpp
     tests/test_vector.cpp
 )
 
