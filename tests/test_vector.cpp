@@ -1,6 +1,9 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "vector.hpp"
+#include "unique_ptr.hpp"
+#include <algorithm>
+#include <numeric>
 
 #include <set>
 #include <stdexcept>
@@ -430,4 +433,85 @@ TEST_CASE("fill constructor cleans up if a copy throws", "[vector][fill][excepti
         REQUIRE(ThrowOnCopy::bad_destroys == 0);
         REQUIRE(ThrowOnCopy::live.size() == before);
     }
+}
+
+// ---------------------------------------------------------------------------
+// const iteration: the compiler loops over const Vectors everywhere, e.g.
+//   void eval(const Program& p) { for (const auto& stmt : p.statements) ... }
+// A range-for calls begin()/end() — never cbegin()/cend() — so those need
+// const overloads.
+// ---------------------------------------------------------------------------
+
+namespace {
+int sum_of(const ricc::Vector<int>& v) {
+    int total = 0;
+    for (const int x : v) {
+        total += x;
+    }
+    return total;
+}
+} // namespace
+
+TEST_CASE("range-for over a const Vector", "[vector][const]") {
+    const ricc::Vector<int> v{1, 2, 3, 4};
+    int total = 0;
+    for (const int& x : v) {
+        total += x;
+    }
+    REQUIRE(total == 10);
+}
+
+TEST_CASE("range-for over a Vector passed by const reference", "[vector][const]") {
+    ricc::Vector<int> v{5, 6, 7};
+    REQUIRE(sum_of(v) == 18);
+}
+
+TEST_CASE("begin/end on a const Vector return pointers to const", "[vector][const][traits]") {
+    const ricc::Vector<int> v{1, 2};
+    STATIC_REQUIRE(std::is_same_v<decltype(v.begin()), const int*>);
+    STATIC_REQUIRE(std::is_same_v<decltype(v.end()), const int*>);
+    REQUIRE(v.end() - v.begin() == 2);
+    REQUIRE(*v.begin() == 1);
+}
+
+TEST_CASE("non-const begin/end still allow modification", "[vector][const]") {
+    ricc::Vector<int> v{1, 2, 3};
+    STATIC_REQUIRE(std::is_same_v<decltype(v.begin()), int*>);
+    for (int& x : v) {
+        x *= 10;
+    }
+    REQUIRE(v[0] == 10);
+    REQUIRE(v[2] == 30);
+}
+
+TEST_CASE("an empty const Vector iterates zero times", "[vector][const]") {
+    const ricc::Vector<int> v;
+    int count = 0;
+    for ([[maybe_unused]] const int& x : v) {
+        ++count;
+    }
+    REQUIRE(count == 0);
+    REQUIRE(v.begin() == v.end());
+}
+
+TEST_CASE("std algorithms work on a const Vector", "[vector][const]") {
+    const ricc::Vector<int> v{3, 1, 4, 1, 5};
+    REQUIRE(std::accumulate(v.begin(), v.end(), 0) == 14);
+    REQUIRE(std::find(v.begin(), v.end(), 4) - v.begin() == 2);
+    REQUIRE(std::count(v.begin(), v.end(), 1) == 2);
+    REQUIRE(std::any_of(v.begin(), v.end(), [](int x) { return x > 4; }));
+}
+
+TEST_CASE("range-for over a const Vector of unique_ptr (AST pattern)", "[vector][const]") {
+    // Like `for (const auto& stmt : program.statements) eval(*stmt);`
+    ricc::Vector<ricc::unique_ptr<std::string>> owned;
+    owned.push_back(ricc::make_unique<std::string>("let"));
+    owned.push_back(ricc::make_unique<std::string>("x"));
+
+    const auto& statements = owned;
+    std::string joined;
+    for (const auto& stmt : statements) {
+        joined += *stmt;
+    }
+    REQUIRE(joined == "letx");
 }
