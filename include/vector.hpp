@@ -142,7 +142,7 @@ constexpr Vector& operator=(Vector&& other) noexcept
 
 private:
 
-// moves the elements into a new buffer of exactly new_capacity
+// moves the elements into a new buffer of size new_cap
 // (used by both reserve and shrink_to_fit)
 constexpr void reallocate(size_type new_capacity){
 		auto mem = allocate_helper(new_capacity);
@@ -304,12 +304,22 @@ constexpr pointer  begin (){
 		return data_; 
 }
 
+const_pointer begin() const{
+
+		return data_;
+}
+
 const const_pointer cbegin () const{
 
 		return data_; 
 }
 
 constexpr pointer end(){
+
+		return data_ + size_;
+}
+
+const_pointer end() const{
 
 		return data_ + size_;
 }
@@ -372,15 +382,6 @@ friend std::ostream& operator << (std::ostream& output, const Vector& vector){
 		output << ']';
 
 		return output;
-		
 }
-
-
-
 };
-
-
-
-
-
 }
