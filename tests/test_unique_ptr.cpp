@@ -320,3 +320,69 @@ TEST_CASE("Vector<unique_ptr<Base>> holds Derived objects and deletes them", "[u
     REQUIRE(Derived::derived_destroyed == 10);
     REQUIRE(Base::base_destroyed == 11);
 }
+
+// ---------------------------------------------------------------------------
+// 8. nullptr: the compiler writes `return nullptr;` and `ptr = nullptr;`
+// ---------------------------------------------------------------------------
+
+namespace {
+// Like parser.hpp's parseIfStatement(): bail out with `return nullptr;`
+ricc::unique_ptr<Base> parse_or_fail(bool ok) {
+    if (!ok) {
+        return nullptr;
+    }
+    return ricc::make_unique<Derived>(1);
+}
+} // namespace
+
+TEST_CASE("unique_ptr can be constructed from nullptr", "[unique_ptr][nullptr]") {
+    ricc::unique_ptr<int> a(nullptr);
+    ricc::unique_ptr<int> b = nullptr;   // implicit: an empty pointer is always safe
+    REQUIRE(a.get() == nullptr);
+    REQUIRE(b.get() == nullptr);
+}
+
+TEST_CASE("nullptr converts implicitly, raw pointers still do not", "[unique_ptr][nullptr][traits]") {
+    STATIC_REQUIRE(std::is_convertible_v<std::nullptr_t, ricc::unique_ptr<int>>);
+    STATIC_REQUIRE_FALSE(std::is_convertible_v<int*, ricc::unique_ptr<int>>);
+}
+
+TEST_CASE("a function returning unique_ptr can return nullptr (parser pattern)", "[unique_ptr][nullptr]") {
+    reset_counters();
+    {
+        auto failed = parse_or_fail(false);
+        REQUIRE(failed == nullptr);
+
+        auto parsed = parse_or_fail(true);
+        REQUIRE(parsed != nullptr);
+        REQUIRE(parsed->id() == 2);
+    }
+    REQUIRE(Derived::derived_destroyed == 1);
+}
+
+TEST_CASE("assigning nullptr deletes the object and empties the pointer", "[unique_ptr][nullptr][lifetime]") {
+    reset_counters();
+    ricc::unique_ptr<Counted> p(new Counted(1));
+    REQUIRE(Counted::alive == 1);
+
+    p = nullptr;
+    REQUIRE(Counted::alive == 0);
+    REQUIRE(p.get() == nullptr);
+    REQUIRE_FALSE(p);
+}
+
+TEST_CASE("assigning nullptr returns *this and is noexcept", "[unique_ptr][nullptr][traits]") {
+    ricc::unique_ptr<int> p(new int(5));
+    REQUIRE(&(p = nullptr) == &p);
+    STATIC_REQUIRE(noexcept(p = nullptr));
+}
+
+TEST_CASE("comparisons with nullptr work in both directions", "[unique_ptr][nullptr]") {
+    // The compiler writes `x != nullptr` and the tests write `nullptr == x`.
+    ricc::unique_ptr<int> empty;
+    ricc::unique_ptr<int> full(new int(1));
+    REQUIRE(empty == nullptr);
+    REQUIRE(nullptr == empty);
+    REQUIRE(full != nullptr);
+    REQUIRE(nullptr != full);
+}

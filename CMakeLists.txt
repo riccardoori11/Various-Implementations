@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.21)
 
 project(implementation LANGUAGES CXX)
 
@@ -15,6 +15,15 @@ target_compile_features(implementation
     INTERFACE
         cxx_std_20
 )
+
+# Namespaced name for projects that use this library (e.g. the compiler):
+#   target_link_libraries(my_target PRIVATE ricc::implementation)
+add_library(ricc::implementation ALIAS implementation)
+
+# Everything below (demo executables, Catch2, tests) is only for working on this
+# repo itself. When another project pulls this one in with FetchContent or
+# add_subdirectory, PROJECT_IS_TOP_LEVEL is false and it only gets the library.
+if(PROJECT_IS_TOP_LEVEL)
 
 
 
@@ -260,3 +269,5 @@ if(ENABLE_SANITIZERS)
 endif()
 
 catch_discover_tests(unique_ptr_tests)
+
+endif() # PROJECT_IS_TOP_LEVEL
