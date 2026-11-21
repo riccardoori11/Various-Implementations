@@ -239,3 +239,24 @@ endif()
 
 include(Catch)
 catch_discover_tests(tests)
+
+# unique_ptr tests live in their own executable so that, while unique_ptr is
+# being extended, compile errors here don't block the Vector/String tests.
+add_executable(unique_ptr_tests
+    tests/test_unique_ptr.cpp
+)
+
+target_link_libraries(unique_ptr_tests
+    PRIVATE
+        implementation
+        Catch2::Catch2WithMain
+)
+
+target_compile_options(unique_ptr_tests PRIVATE -Wall -Wextra -Wpedantic)
+
+if(ENABLE_SANITIZERS)
+    target_compile_options(unique_ptr_tests PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -g)
+    target_link_options(unique_ptr_tests PRIVATE -fsanitize=address,undefined)
+endif()
+
+catch_discover_tests(unique_ptr_tests)

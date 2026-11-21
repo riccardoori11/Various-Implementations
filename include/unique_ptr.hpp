@@ -3,6 +3,7 @@
 #include <new>
 #include <iostream>
 #include <optional>
+#include <type_traits>
 #include <utility>
 
 namespace ricc{
@@ -24,67 +25,97 @@ private:
 public:
 
 		
-		unique_ptr() = default;
+unique_ptr() = default;
 
-		~unique_ptr(){
+~unique_ptr(){
 
-				if (ptr == nullptr){
+		if (ptr == nullptr){
 
-						return;
-				}
-				delete ptr;
-				ptr = nullptr;
+				return;
 		}
+		delete ptr;
+		ptr = nullptr;
+}
 
-		unique_ptr(T* p): ptr(p)
-		{
-		}
+explicit unique_ptr(T* p): ptr(p)
+{
+}
 
-		unique_ptr(const unique_ptr& other) = delete;
+unique_ptr(const unique_ptr& other) = delete;
 
-		unique_ptr& operator = (const unique_ptr& other) = delete;
+unique_ptr& operator = (const unique_ptr& other) = delete;
 
-		unique_ptr(unique_ptr&& other){
+unique_ptr(unique_ptr&& other) noexcept: ptr(std::exchange(other.ptr, nullptr)){
 
-				std::swap(ptr,other.ptr);
-		}
+}
 
-		unique_ptr& operator= (unique_ptr&& other){
+template<typename U> requires std::is_convertible_v<U*, T*>
+unique_ptr(unique_ptr<U>&& other) noexcept: ptr(other.release()){
 
-				if (this == &other){
+}
 
-						return *this;
-				}
 
-				delete ptr;
-				ptr = std::exchange(other.ptr, nullptr);
+unique_ptr& operator= (unique_ptr&& other) noexcept{
+
+		if (this == &other){
 
 				return *this;
 		}
+		auto* old_ptr = ptr;
+		ptr = other.release();
+		delete old_ptr;
+		return *this;
+}
 
-		T& operator*(){
+template<typename U> requires std::is_convertible_v<U*, T*>
+unique_ptr& operator= (unique_ptr<U>&& other) noexcept{
 
-				return (*ptr);
-		}
+		auto* old_ptr = ptr;
+		ptr = other.release();
+		delete old_ptr;
 
-		T* get(){
+		return *this;
+}
 
-				return ptr;
-		}
+[[nodiscard]] T* release() noexcept{
 
-		const T* get() const{
+		return std::exchange(ptr, nullptr);
+}
 
-				return ptr;
-		}
+void reset(T* pointer = nullptr) noexcept{
+		auto* old = ptr;
 
-		void swap(unique_ptr& other){
+		ptr = pointer;
 
-				std::swap(ptr,other.ptr);
-		}
-
-				
+		delete old;
+}
 
 
+T* operator->() const noexcept {
+		return ptr;
+}
+
+
+T& operator*() const noexcept{
+
+		return (*ptr);
+}
+
+
+T* get() const noexcept{
+
+		return ptr;
+}
+
+void swap(unique_ptr& other){
+
+		std::swap(ptr,other.ptr);
+}
+
+// compiler could convert to bool silently
+explicit operator bool() const noexcept{
+		return ptr ? true : false;
+}
 };
 
 template<typename T1,typename T2>
@@ -94,10 +125,16 @@ bool operator == (const unique_ptr<T1>&x , const unique_ptr<T2>& y){
 }
 
 template<typename T1>
-bool operator == (const unique_ptr<T1>& X, std::nullptr_t r){
+bool operator == (const unique_ptr<T1>& X, std::nullptr_t ){
 
 		return X.get() == nullptr;
 
+}
+
+template<typename T,typename ... Args>
+ricc::unique_ptr<T> make_unique(Args&&... args){
+		T* raw_ptr = new T(std::forward<Args>(args)...);
+		return unique_ptr(raw_ptr);
 }
 
 }
