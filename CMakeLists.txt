@@ -270,4 +270,24 @@ endif()
 
 catch_discover_tests(unique_ptr_tests)
 
+# optional tests: own executable while optional.hpp is being written.
+add_executable(optional_tests
+    tests/test_optional.cpp
+)
+
+target_link_libraries(optional_tests
+    PRIVATE
+        implementation
+        Catch2::Catch2WithMain
+)
+
+target_compile_options(optional_tests PRIVATE -Wall -Wextra -Wpedantic)
+
+if(ENABLE_SANITIZERS)
+    target_compile_options(optional_tests PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -g)
+    target_link_options(optional_tests PRIVATE -fsanitize=address,undefined)
+endif()
+
+catch_discover_tests(optional_tests)
+
 endif() # PROJECT_IS_TOP_LEVEL
