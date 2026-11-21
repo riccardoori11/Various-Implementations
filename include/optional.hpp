@@ -1,7 +1,7 @@
 #pragma once
 #include <exception>
-#include <exception>
 #include <memory>
+#include <type_traits>
 namespace ricc{
 
 // std::bad_optional_access
@@ -41,6 +41,70 @@ optional() = default;
 optional(T value):has_value_(true)
 {
 		std::construct_at(&storage_.value,std::move(value));
+}
+
+void reset() noexcept {
+
+		if (has_value_){
+				storage_.value.~T();
+		}
+		has_value_ = false;
+
+}
+
+optional(const optional& other) requires std::is_copy_constructible_v<T>: has_value_(other.has_value_)
+{
+		if (other.has_value_){
+				std::construct_at(&storage_.value,other.storage_.value);
+		}
+}
+
+optional(optional&& other) noexcept (std::is_nothrow_move_constructible_v<T>):has_value_(other.has_value_)  
+{
+		if (other.has_value_){
+				std::construct_at(&storage_.value,std::move(other.storage_.value));
+		}
+}
+
+optional& operator = (const optional& other){
+
+		if (has_value_ && other.has_value_){
+				storage_.value = other.storage_.value;
+		}
+		else if(has_value_ && !other.has_value_){
+				reset();
+		}
+		else if(!has_value_ && other.has_value_){
+				std::construct_at(&storage_.value, other.storage_.value);
+		}
+		has_value_ = other.has_value_;
+		return *this;
+} 
+
+
+optional& operator = (optional&& other)  noexcept (std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_assignable_v<T>){
+
+		if (has_value_ && other.has_value_){
+				std::swap(storage_.value,other.storage_.value);
+		}
+		else if(has_value_ && !other.has_value_){
+				reset();
+		}
+		else if(!has_value_ && other.has_value_){
+				std::construct_at(&storage_.value, std::move(other.storage_.value));
+		}
+		has_value_ = other.has_value_;
+		return *this;
+}
+
+template<typename ...Args>
+T& emplace(Args&&... args){
+
+		reset();
+		std::construct_at(&storage_.value, std::forward<Args>(args)...);
+		has_value_ = true;
+
+		return storage_.value;
 }
 
 ~optional(){
