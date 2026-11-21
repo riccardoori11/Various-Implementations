@@ -41,9 +41,18 @@ explicit unique_ptr(T* p): ptr(p)
 {
 }
 
+unique_ptr(std::nullptr_t): ptr(nullptr) 
+{}
+
 unique_ptr(const unique_ptr& other) = delete;
 
 unique_ptr& operator = (const unique_ptr& other) = delete;
+
+unique_ptr& operator= (std::nullptr_t) noexcept
+{
+		reset();
+		return *this;
+}
 
 unique_ptr(unique_ptr&& other) noexcept: ptr(std::exchange(other.ptr, nullptr)){
 
