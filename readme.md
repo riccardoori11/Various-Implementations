@@ -1,5 +1,7 @@
 ![CI](https://github.com/riccardoori11/Various-Implementations/actions/workflows/ci.yml/badge.svg)
 
+Currently trying to build this project to replace the std library containers and pointers in my interpreter project
+
 Going to be a directory where i try to implement various c++ object and data structures from the standard library
 
 
@@ -35,4 +37,8 @@ cmake --build build
 
 Run all tests:
 ctest --test-dir build --output-on-failure
+
+cmake --build build --target tests
+./build/tests '[string]'
+
 
