@@ -3,10 +3,11 @@
 	 *
 		 * sizeof(std::string) gives me 32 bytes
 		 * */
-
 #include <algorithm>
+#include <cstring>
 #include <array>
 #include <ios>
+#include <limits>
 #include <ostream>
 #include <memory>
 #include <iostream>
@@ -21,6 +22,8 @@ private:
 
 /**/
 static constexpr std::size_t gf{2};
+
+
 struct short_string{
 
 		static constexpr std::size_t MAX{23};
@@ -75,16 +78,6 @@ auto deallocate(char* ptr){
 		::operator delete(ptr);
 }
 
-const char* data() const{
-
-		if (is_short()){
-
-				auto& it = getShortString();
-				return it.buffer.data();
-		}
-		return getLongString().ptr;
-}
-
 void copy_to_heap(){
 
 		auto& small = getShortString();
@@ -101,7 +94,7 @@ void copy_to_heap(){
 }
 
 
-void swap(String& other){
+void swap(String& other) noexcept{
 
 		data_.swap(other.data_);
 		std::swap(size_,other.size_);
@@ -109,12 +102,63 @@ void swap(String& other){
 
 public:
 
+static constexpr std::size_t npos = std::numeric_limits<std::size_t>::max();
+// Observers. data() was private before; it moved here unchanged.
+const char* data() const noexcept{
+
+		if (is_short()){
+
+				auto& it = getShortString();
+				return it.buffer.data();
+		}
+		return getLongString().ptr;
+}
+
+// Both representations keep a '\0' after the last character, so data() is
+// already a valid C string.
+const char* c_str() const noexcept{
+		return data();
+}
+
+std::size_t size() const noexcept{
+		return size_;
+}
+
+bool empty() const noexcept{
+		return size_ == 0;
+}
+
 String() = default;
 
+String(const char* c_string, std::size_t count): size_(count){
+
+		if (count <= short_string::MAX){
+				auto& small = getShortString();
+				std::ranges::copy_n(c_string, count, small.buffer.begin());
+				small.buffer[size_] = '\0';
+		}
+		else{
+				auto* ptr = helper_allocate(count);
+				std::ranges::copy_n(c_string, count, ptr);
+				std::construct_at(ptr + count,'\0');
+				data_.emplace<long_string>(ptr,size_);
+		}
+}
+
+String(const char* c_string):String(c_string,std::strlen(c_string)){
+}
+
+String substr(std::size_t pos = 0, std::size_t count = npos) const{
+		
+		if (pos > size_){
+				throw std::out_of_range{"pos has to be smaller tha size"};
+		}
+		std::size_t length = size_ - pos;
+		return String(data() + pos, std::min(length,count));
+} 
+
 String (const String& other): size_(other.size_){
-
 		if (other.is_short()){
-
 				auto& small = getShortString();
 				auto& other_small = std::get<short_string>(other.data_);
 				for (std::size_t i{}; i < size_; ++i){
@@ -124,37 +168,28 @@ String (const String& other): size_(other.size_){
 				small.buffer[size_] = '\0';
 		}
 		else{
-
 				const auto& other_large = std::get<long_string>(other.data_);
 				char* ptr = helper_allocate(other_large.capacity_);
 				for (std::size_t i{}; i < size_; ++i){
-
 						std::construct_at(ptr+ i,*(other_large.ptr + i));
 				}
 				std::construct_at(ptr +  size_, '\0');
-
 				data_.emplace<long_string>(ptr,other_large.capacity_);
 		}
-
 } 
 
-
-
 String& operator = (const String& other){
-		
-		if (this == &other){
 
+		if (this == &other){
 				return *this;
 		}
-
 		String temp(other);
 		swap(temp);
-
 		return *this;
 
 };
 
-String (String&& other):size_(std::exchange(other.size_,0))
+String (String&& other) noexcept :size_(std::exchange(other.size_,0))
 {
 
 		if (other.is_short()){
@@ -178,7 +213,7 @@ String (String&& other):size_(std::exchange(other.size_,0))
 		}
 }
 
-String& operator = (String&& other){
+String& operator = (String&& other) noexcept{
 
 
 		if (this == &other){
@@ -216,6 +251,65 @@ char& front(){
 		}
 }
 
+bool operator==(const String& other) const noexcept{
+
+		if (size_ != other.size_){return false;}
+
+		return std::ranges::equal(data(), data() + size_, other.data(), other.data() + other.size_);
+}
+
+// appends count characters starting at source used by both operator+=
+String& append(const char* source, std::size_t count){
+
+		if (count == 0){
+				return *this;
+		}
+
+		const std::size_t new_size = size_ + count;
+		const std::size_t capacity = is_short() ? short_string::MAX : getLongString().capacity_;
+
+		if (new_size <= capacity){
+				char* dest = is_short() ? getShortString().buffer.data() : getLongString().ptr;
+				std::ranges::copy_n(source, static_cast<std::ptrdiff_t>(count), dest + size_);
+				dest[new_size] = '\0';
+		}
+		else{
+				const std::size_t new_capacity = std::max(new_size, capacity * gf);
+				char* ptr = helper_allocate(new_capacity);
+				std::ranges::copy_n(data(), static_cast<std::ptrdiff_t>(size_), ptr);
+				std::ranges::copy_n(source, static_cast<std::ptrdiff_t>(count), ptr + size_);
+				ptr[new_size] = '\0';
+
+				if (is_long()){
+						deallocate(getLongString().ptr);
+				}
+				data_.emplace<long_string>(ptr, new_capacity);
+		}
+
+		size_ = new_size;
+		return *this;
+}
+
+String& operator+=(const String& other){
+		return append(other.data(), other.size_);
+}
+
+String& operator+=(const char* c_string){
+		return append(c_string, std::strlen(c_string));
+}
+
+// lhs is taken by value: that copy is the result, so we just append to it.
+// Hidden friends, like operator<<: found by ADL whenever a String is involved.
+friend String operator+(String lhs, const String& rhs){
+		lhs += rhs;
+		return lhs;
+}
+
+friend String operator+(String lhs, const char* rhs){
+		lhs += rhs;
+		return lhs;
+}
+
 void pushBack(const char& ch){
 		if (is_short()){
 				auto& it = getShortString();
@@ -241,6 +335,7 @@ void pushBack(const char& ch){
 				long_sso.ptr[size_] = '\0';
 }
 char& operator[](std::size_t idx){
+
 		if (idx >= size_){
 				throw std::out_of_range("idx too big");
 		}
@@ -274,16 +369,11 @@ const char& operator[](std::size_t idx) const {
 		}
 
 }
-
 friend std::ostream& operator << (std::ostream& output, const String& string){
 
 		return output.write(string.data(), static_cast<std::streamsize>(string.size_));
-
 }
-
-
 };
-
-
-
 }
+
+
