@@ -15,7 +15,11 @@
 #include <stdexcept>
 #include <utility>
 #include <variant>
+
 namespace ricc{
+
+
+
 class String{
 
 private:
@@ -215,37 +219,27 @@ String (String&& other) noexcept :size_(std::exchange(other.size_,0))
 
 String& operator = (String&& other) noexcept{
 
-
 		if (this == &other){
-
 				return *this;
 		}
-
 		String temp(std::move(other));
-
 		swap(temp);
-
 		return *this;
 }
 
 ~String(){
-
 		if (is_long()){
-
 				auto& heap = getLongString();
 				deallocate(heap.ptr);
 		}
 };
 
 char& front(){
-
 		if (is_short()){
-
 				auto& it = getShortString();
 				return it.buffer[0];
 		}
 		else{
-
 				auto& it = getLongString();
 				return it.ptr[0];
 		}
@@ -374,6 +368,25 @@ friend std::ostream& operator << (std::ostream& output, const String& string){
 		return output.write(string.data(), static_cast<std::streamsize>(string.size_));
 }
 };
+
+ 
 }
 
 
+
+template<>
+struct std::hash<ricc::String>{
+		// FNV algorithm
+		static constexpr std::size_t offset_basis{14695981039346656037ULL};
+		static constexpr std::size_t FNV_Prime{1099511628211};
+		std::size_t operator()(const ricc::String& value) const{
+				std::size_t hash = offset_basis;
+				for(std::size_t i{}; i < value.size(); ++i){
+						// could be an unsigned char
+						hash ^= static_cast<std::size_t>(*(value.data() + i));
+						hash *= FNV_Prime;
+				}
+				return hash;
+		}
+
+};
