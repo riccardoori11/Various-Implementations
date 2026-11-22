@@ -290,4 +290,25 @@ endif()
 
 catch_discover_tests(optional_tests)
 
+# String features the compiler project needs: own executable while string.hpp
+# is being extended, so its compile errors don't block the other tests.
+add_executable(string_tests
+    tests/test_string_compiler.cpp
+)
+
+target_link_libraries(string_tests
+    PRIVATE
+        implementation
+        Catch2::Catch2WithMain
+)
+
+target_compile_options(string_tests PRIVATE -Wall -Wextra -Wpedantic)
+
+if(ENABLE_SANITIZERS)
+    target_compile_options(string_tests PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -g)
+    target_link_options(string_tests PRIVATE -fsanitize=address,undefined)
+endif()
+
+catch_discover_tests(string_tests)
+
 endif() # PROJECT_IS_TOP_LEVEL
