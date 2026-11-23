@@ -311,4 +311,24 @@ endif()
 
 catch_discover_tests(string_tests)
 
+# variant tests: own executable while variant.hpp is being rewritten.
+add_executable(variant_tests
+    tests/test_variant.cpp
+)
+
+target_link_libraries(variant_tests
+    PRIVATE
+        implementation
+        Catch2::Catch2WithMain
+)
+
+target_compile_options(variant_tests PRIVATE -Wall -Wextra -Wpedantic)
+
+if(ENABLE_SANITIZERS)
+    target_compile_options(variant_tests PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -g)
+    target_link_options(variant_tests PRIVATE -fsanitize=address,undefined)
+endif()
+
+catch_discover_tests(variant_tests)
+
 endif() # PROJECT_IS_TOP_LEVEL

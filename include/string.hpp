@@ -372,8 +372,6 @@ friend std::ostream& operator << (std::ostream& output, const String& string){
  
 }
 
-
-
 template<>
 struct std::hash<ricc::String>{
 		// FNV algorithm

@@ -7,7 +7,7 @@
 #include <variant>
 
 namespace ricc{
-
+struct bad_variant_access: std::exception{};
 /*Forward declaration for get*/
 template<typename First,typename ...Rest>
 class variant;
@@ -33,6 +33,7 @@ struct index_of<T,T,Rest...> : std::integral_constant<std::size_t,0>{};
 /*
  * Recursion to check get idx
  * */
+
 template <typename T, typename First, typename ...Rest>
 struct index_of<T,First, Rest...>: 
 		std::integral_constant<std::size_t, 1+ index_of<T,Rest...>::value>{};
@@ -44,7 +45,8 @@ template<typename First, typename... Rest>
 class variant{
 
 private:
-		std::size_t index{};
+
+		std::size_t index_{};
 
 		static constexpr std::size_t Storage_size_ = std::max({sizeof(First),sizeof (Rest)...});
 		static constexpr std::size_t Storage_align = std::max({alignof(First),alignof(Rest)...});
@@ -65,10 +67,8 @@ private:
 				auto *dst = static_cast<T*>(destination);
 				auto *src = static_cast<T*>(source);
 
-				std::swap(*dst,*src);
-
+				std::construct_at(dst, std::move(*src));
 		}
-/*
 		template<typename T>
 		static void Destroy_type(void* ptr){
 
@@ -77,7 +77,6 @@ private:
 				std::destroy_at(obj);
 		}
 
-		*/
 		/*type erasure*/
 		struct operations{
 
@@ -87,7 +86,7 @@ private:
 				using Move = void (*)(void* , void* );
 				Move move;
 
-				using Destroy = void(*)(void);
+				using Destroy = void(*)(void*);
 				Destroy destroy;
 				
 		};
@@ -96,11 +95,13 @@ private:
 				operations{
 						&Copy_type<First>,
 						&Move_Type<First>,
+						&Destroy_type<First>
 				},
 				operations{
-						&Copy_type<Rest...>,
-						&Move_Type<Rest...>,
-				}
+						&Copy_type<Rest>,
+						&Move_Type<Rest>,
+						&Destroy_type<Rest>
+				}...
 				
 
 		};
@@ -109,12 +110,12 @@ private:
 
 public:
 		/*value initialized*/
-		variant() :index(){
+		variant() :index_(){
 				std::construct_at(reinterpret_cast<First*>(data_));
 		}
 
-		constexpr std::size_t getIndex() const {
-				return  index;
+		constexpr std::size_t index() const noexcept{
+				return  index_;
 		
 		}
 
@@ -128,39 +129,36 @@ public:
 
 				std::construct_at(reinterpret_cast<U_NORM*>(data_),std::forward<U>(object));
 
-				index = index_types;
+				index_ = index_types;
 				
 		}
 		variant(const variant& other){
 
-				op[other.index].copy
+				op[other.index_].copy
 						(
 						 data_,
 						 other.data_
 						 );
 
-				index = other.index;
+				index_ = other.index_;
 
 		}
 		
 		variant& operator= (const variant& other) = delete;
 
-		variant(variant&& other):index(std::exchange(other.index,0))
+		variant(variant&& other) noexcept:index_(other.index_) 
 		{
 
-				op[other.index].move(
-
+				op[other.index_].move(
 						data_,
 						other.data_
 								);
 		}
 		variant& operator = (variant&& other) = delete;
-/*
-		~variant(){
 
-				op[index].destroy(data_);
+		~variant(){
+				op[index_].destroy(data_);
 		}
-*/
 		template<typename T, typename F, typename ...R>
 		friend constexpr T& get(variant<F,R...>& value);
 
@@ -176,7 +174,7 @@ constexpr bool holds_alternative(const variant<First,Ts...>& value){
 
 		constexpr std::size_t expected_index = index_of_v<T,First,Ts...>;
 
-		return value.getIndex() == expected_index;
+		return value.index() == expected_index;
 }
 
 
@@ -185,14 +183,14 @@ constexpr T& get(variant<First,Rest...>& value){
 
 		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
 		using T_NORM = std::decay_t<T>;
-		if (expected_index == value.getIndex()){
+		if (expected_index == value.index()){
 
 				auto* ptr = reinterpret_cast<T_NORM*>(value.data_);
 				return *ptr;
 		}
 		else{
 
-				throw std::bad_variant_access();
+				throw ricc::bad_variant_access();
 		}
 }
 
@@ -201,16 +199,17 @@ constexpr const T& get(const variant<First,Rest...>& value){
 
 		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
 		using T_NORM = std::decay_t<T>;
-		if (expected_index == value.getIndex()){
+		if (expected_index == value.index()){
 
 				auto *ptr =  reinterpret_cast<const T_NORM*>(value.data_);
 				return *ptr;
 				 
 		}
 		else{
-
-				std::bad_variant_access();
+				throw ricc::bad_variant_access();
 		}
 }
+
+
  
 }
