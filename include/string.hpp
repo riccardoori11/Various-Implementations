@@ -99,7 +99,6 @@ void copy_to_heap(){
 
 
 void swap(String& other) noexcept{
-
 		data_.swap(other.data_);
 		std::swap(size_,other.size_);
 }
@@ -107,7 +106,6 @@ void swap(String& other) noexcept{
 public:
 
 static constexpr std::size_t npos = std::numeric_limits<std::size_t>::max();
-// Observers. data() was private before; it moved here unchanged.
 const char* data() const noexcept{
 
 		if (is_short()){
@@ -292,8 +290,6 @@ String& operator+=(const char* c_string){
 		return append(c_string, std::strlen(c_string));
 }
 
-// lhs is taken by value: that copy is the result, so we just append to it.
-// Hidden friends, like operator<<: found by ADL whenever a String is involved.
 friend String operator+(String lhs, const String& rhs){
 		lhs += rhs;
 		return lhs;

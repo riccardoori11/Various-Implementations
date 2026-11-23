@@ -60,6 +60,15 @@ private:
 				std::construct_at( static_cast<T*>(destination), *object_source);
 		}
 
+		void swap(variant& other) noexcept (std::is_nothrow_move_constructible_v<First> && (std::is_nothrow_move_constructible_v<Rest> && ...)){
+				variant temp{std::move(*this)};
+				op[index_].destroy(data_);
+				op[other.index_].move(data_,other.data_);
+				index_ = other.index_;
+				other.op[other.index_].destroy(other.data_);
+				op[temp.index_].move(other.data_,temp.data_);
+				other.index_ = temp.index_;
+		}
 
 		template<typename T>
 		static void Move_Type(void* destination, void* source){
@@ -116,9 +125,7 @@ public:
 
 		constexpr std::size_t index() const noexcept{
 				return  index_;
-		
 		}
-
 		template <typename U>
 		requires (!std::is_same_v<variant,std::remove_cvref_t<U>>)
 		variant(U&& object){
@@ -144,9 +151,17 @@ public:
 
 		}
 		
-		variant& operator= (const variant& other) = delete;
+		variant& operator= (const variant& other){
+				if (this == &other){
+						return *this;
+				}
+				variant temp{other};
+				swap(temp);
+				return *this;
+		}
 
-		variant(variant&& other) noexcept:index_(other.index_) 
+		variant(variant&& other) noexcept(std::is_nothrow_move_constructible_v<First> && (std::is_nothrow_move_constructible_v<Rest>&&... )) 
+				:index_(other.index_) 
 		{
 
 				op[other.index_].move(
@@ -154,8 +169,14 @@ public:
 						other.data_
 								);
 		}
-		variant& operator = (variant&& other) = delete;
+		variant& operator = (variant&& other) noexcept (std::is_nothrow_move_constructible_v<First> && (std::is_nothrow_move_constructible_v<Rest> && ...)){
+				if (this == &other){return *this;}
+				variant temp{std::move(other)};
+				swap(temp);
+				return *this;
+		}
 
+		// destructor
 		~variant(){
 				op[index_].destroy(data_);
 		}
@@ -165,7 +186,11 @@ public:
 		template<typename T, typename F, typename ...R>
 		friend constexpr const T& get(const variant<F,R...>& value);
 
-	
+		template <typename T,typename F, typename ...R>
+		friend constexpr T* get_if(variant<F,R...>* value) noexcept;
+
+		template <typename T,typename F, typename ...R> 
+		friend constexpr const T* get_if(const variant<F,R...>* value) noexcept;
 
 };
 
@@ -200,16 +225,42 @@ constexpr const T& get(const variant<First,Rest...>& value){
 		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
 		using T_NORM = std::decay_t<T>;
 		if (expected_index == value.index()){
-
 				auto *ptr =  reinterpret_cast<const T_NORM*>(value.data_);
 				return *ptr;
-				 
 		}
 		else{
 				throw ricc::bad_variant_access();
 		}
 }
+template <typename T,typename First, typename ...Rest>
+constexpr T* get_if(variant<First,Rest...>* value) noexcept{
+		if (value == nullptr){
+				return nullptr;
+		}
+		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
+		using T_NORM = std::decay_t<T>;
+		if (expected_index == value->index_){
+				auto *ptr =  reinterpret_cast<T_NORM*>(value->data_);
+				return ptr;
+		}
+		else{
+				return nullptr;
+		}
+}
 
-
- 
+template <typename T,typename First, typename ...Rest>
+constexpr const T* get_if(const variant<First,Rest...>* value) noexcept{
+		if (value == nullptr){
+				return nullptr;
+		}
+		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
+		using T_NORM = std::decay_t<T>;
+		if (expected_index == value->index_){
+				auto *ptr =  reinterpret_cast<const T_NORM*>(value->data_);
+				return ptr;
+		}
+		else{
+				return nullptr;
+		}
+}
 }
