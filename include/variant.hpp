@@ -318,4 +318,15 @@ decltype(auto) visit(Callable&& f, V1&& v1, V2&& v2){
 		}, v1);
 }
 
+template <typename First, typename ...Rest>
+bool operator==(const variant<First,Rest...>& lhs, const variant<First,Rest...>& rhs){
+		if (lhs.index() != rhs.index()){
+				return false;
+		}
+		return ricc::visit([&](const auto& x) -> bool{
+				using T = std::remove_cvref_t<decltype(x)>;
+				return x == ricc::get<T>(rhs);
+		}, lhs);
+}
+
 }
