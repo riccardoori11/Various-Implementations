@@ -7,7 +7,7 @@
 #include <variant>
 
 namespace ricc{
-
+struct bad_variant_access: std::exception{};
 /*Forward declaration for get*/
 template<typename First,typename ...Rest>
 class variant;
@@ -33,6 +33,7 @@ struct index_of<T,T,Rest...> : std::integral_constant<std::size_t,0>{};
 /*
  * Recursion to check get idx
  * */
+
 template <typename T, typename First, typename ...Rest>
 struct index_of<T,First, Rest...>: 
 		std::integral_constant<std::size_t, 1+ index_of<T,Rest...>::value>{};
@@ -44,7 +45,8 @@ template<typename First, typename... Rest>
 class variant{
 
 private:
-		std::size_t index{};
+
+		std::size_t index_{};
 
 		static constexpr std::size_t Storage_size_ = std::max({sizeof(First),sizeof (Rest)...});
 		static constexpr std::size_t Storage_align = std::max({alignof(First),alignof(Rest)...});
@@ -58,6 +60,15 @@ private:
 				std::construct_at( static_cast<T*>(destination), *object_source);
 		}
 
+		void swap(variant& other) noexcept (std::is_nothrow_move_constructible_v<First> && (std::is_nothrow_move_constructible_v<Rest> && ...)){
+				variant temp{std::move(*this)};
+				op[index_].destroy(data_);
+				op[other.index_].move(data_,other.data_);
+				index_ = other.index_;
+				other.op[other.index_].destroy(other.data_);
+				op[temp.index_].move(other.data_,temp.data_);
+				other.index_ = temp.index_;
+		}
 
 		template<typename T>
 		static void Move_Type(void* destination, void* source){
@@ -65,10 +76,8 @@ private:
 				auto *dst = static_cast<T*>(destination);
 				auto *src = static_cast<T*>(source);
 
-				std::swap(*dst,*src);
-
+				std::construct_at(dst, std::move(*src));
 		}
-/*
 		template<typename T>
 		static void Destroy_type(void* ptr){
 
@@ -77,7 +86,6 @@ private:
 				std::destroy_at(obj);
 		}
 
-		*/
 		/*type erasure*/
 		struct operations{
 
@@ -87,7 +95,7 @@ private:
 				using Move = void (*)(void* , void* );
 				Move move;
 
-				using Destroy = void(*)(void);
+				using Destroy = void(*)(void*);
 				Destroy destroy;
 				
 		};
@@ -96,11 +104,13 @@ private:
 				operations{
 						&Copy_type<First>,
 						&Move_Type<First>,
+						&Destroy_type<First>
 				},
 				operations{
-						&Copy_type<Rest...>,
-						&Move_Type<Rest...>,
-				}
+						&Copy_type<Rest>,
+						&Move_Type<Rest>,
+						&Destroy_type<Rest>
+				}...
 				
 
 		};
@@ -109,15 +119,13 @@ private:
 
 public:
 		/*value initialized*/
-		variant() :index(){
+		variant() :index_(){
 				std::construct_at(reinterpret_cast<First*>(data_));
 		}
 
-		constexpr std::size_t getIndex() const {
-				return  index;
-		
+		constexpr std::size_t index() const noexcept{
+				return  index_;
 		}
-
 		template <typename U>
 		requires (!std::is_same_v<variant,std::remove_cvref_t<U>>)
 		variant(U&& object){
@@ -128,46 +136,61 @@ public:
 
 				std::construct_at(reinterpret_cast<U_NORM*>(data_),std::forward<U>(object));
 
-				index = index_types;
+				index_ = index_types;
 				
 		}
 		variant(const variant& other){
 
-				op[other.index].copy
+				op[other.index_].copy
 						(
 						 data_,
 						 other.data_
 						 );
 
-				index = other.index;
+				index_ = other.index_;
 
 		}
 		
-		variant& operator= (const variant& other) = delete;
+		variant& operator= (const variant& other){
+				if (this == &other){
+						return *this;
+				}
+				variant temp{other};
+				swap(temp);
+				return *this;
+		}
 
-		variant(variant&& other):index(std::exchange(other.index,0))
+		variant(variant&& other) noexcept(std::is_nothrow_move_constructible_v<First> && (std::is_nothrow_move_constructible_v<Rest>&&... )) 
+				:index_(other.index_) 
 		{
 
-				op[other.index].move(
-
+				op[other.index_].move(
 						data_,
 						other.data_
 								);
 		}
-		variant& operator = (variant&& other) = delete;
-/*
-		~variant(){
-
-				op[index].destroy(data_);
+		variant& operator = (variant&& other) noexcept (std::is_nothrow_move_constructible_v<First> && (std::is_nothrow_move_constructible_v<Rest> && ...)){
+				if (this == &other){return *this;}
+				variant temp{std::move(other)};
+				swap(temp);
+				return *this;
 		}
-*/
+
+		// destructor
+		~variant(){
+				op[index_].destroy(data_);
+		}
 		template<typename T, typename F, typename ...R>
 		friend constexpr T& get(variant<F,R...>& value);
 
 		template<typename T, typename F, typename ...R>
 		friend constexpr const T& get(const variant<F,R...>& value);
 
-	
+		template <typename T,typename F, typename ...R>
+		friend constexpr T* get_if(variant<F,R...>* value) noexcept;
+
+		template <typename T,typename F, typename ...R> 
+		friend constexpr const T* get_if(const variant<F,R...>* value) noexcept;
 
 };
 
@@ -176,7 +199,7 @@ constexpr bool holds_alternative(const variant<First,Ts...>& value){
 
 		constexpr std::size_t expected_index = index_of_v<T,First,Ts...>;
 
-		return value.getIndex() == expected_index;
+		return value.index() == expected_index;
 }
 
 
@@ -185,14 +208,14 @@ constexpr T& get(variant<First,Rest...>& value){
 
 		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
 		using T_NORM = std::decay_t<T>;
-		if (expected_index == value.getIndex()){
+		if (expected_index == value.index()){
 
 				auto* ptr = reinterpret_cast<T_NORM*>(value.data_);
 				return *ptr;
 		}
 		else{
 
-				throw std::bad_variant_access();
+				throw ricc::bad_variant_access();
 		}
 }
 
@@ -201,16 +224,98 @@ constexpr const T& get(const variant<First,Rest...>& value){
 
 		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
 		using T_NORM = std::decay_t<T>;
-		if (expected_index == value.getIndex()){
-
+		if (expected_index == value.index()){
 				auto *ptr =  reinterpret_cast<const T_NORM*>(value.data_);
 				return *ptr;
-				 
 		}
 		else{
-
-				std::bad_variant_access();
+				throw ricc::bad_variant_access();
 		}
 }
- 
+template <typename T,typename First, typename ...Rest>
+constexpr T* get_if(variant<First,Rest...>* value) noexcept{
+		if (value == nullptr){
+				return nullptr;
+		}
+		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
+		using T_NORM = std::decay_t<T>;
+		if (expected_index == value->index_){
+				auto *ptr =  reinterpret_cast<T_NORM*>(value->data_);
+				return ptr;
+		}
+		else{
+				return nullptr;
+		}
+}
+
+template <typename T,typename First, typename ...Rest>
+constexpr const T* get_if(const variant<First,Rest...>* value) noexcept{
+		if (value == nullptr){
+				return nullptr;
+		}
+		constexpr std::size_t expected_index = index_of_v<T,First, Rest...>;
+		using T_NORM = std::decay_t<T>;
+		if (expected_index == value->index_){
+				auto *ptr =  reinterpret_cast<const T_NORM*>(value->data_);
+				return ptr;
+		}
+		else{
+				return nullptr;
+		}
+}
+
+namespace detail{
+		template<typename T, typename First, typename ...Rest, typename Callable>
+		decltype(auto) invoke_one(Callable& f,variant<First,Rest...>& v){
+				return f(get<T>(v));
+		}
+
+		template<typename T, typename First, typename ...Rest, typename Callable>
+		decltype(auto) invoke_one(Callable& f,const variant<First,Rest...>& v){
+				return f(get<T>(v));
+		}
+}
+
+template <typename First, typename ...Rest, typename Callable>
+decltype(auto) visit(Callable&& f, variant<First, Rest...>& v){
+		using RETURN = std::invoke_result_t<Callable&, First&>;
+		// runtime value has to choose between code that was generated for different types at compile time
+		using CALL_F = RETURN(*)(Callable&, variant<First,Rest...>&);
+
+		constexpr CALL_F invocations[] = {
+				&detail::invoke_one<First>,
+				&detail::invoke_one<Rest>...
+		}; 
+		return invocations[v.index()]
+				(
+				 f,v
+				);
+}
+
+
+template <typename First, typename ...Rest, typename Callable>
+decltype(auto) visit(Callable&& f,const variant<First, Rest...>& v){
+		using RETURN = std::invoke_result_t<Callable&, const First&>;
+		// runtime value has to choose between code that was generated for different types at compile time
+		using CALL_F = RETURN(*)(Callable&, const variant<First,Rest...>&);
+
+		constexpr CALL_F invocations[] = {
+				&detail::invoke_one<First>,
+				&detail::invoke_one<Rest>...
+		}; 
+		return invocations[v.index()]
+				(
+				 f,v
+				);
+}
+
+template <typename Callable, typename V1, typename V2>
+decltype(auto) visit(Callable&& f, V1&& v1, V2&& v2){
+		return ricc::visit([&](auto& x) -> decltype(auto){
+				return ricc::visit([&](auto& y) -> decltype(auto){
+						return f(x, y);
+				}, v2);
+		}, v1);
+}
+
 }
