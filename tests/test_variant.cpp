@@ -8,7 +8,8 @@
 //
 // Names the tests expect in namespace ricc:
 //   variant<Ts...>, v.index(), holds_alternative<T>(v), get<T>(v),
-//   get_if<T>(&v), visit(f, v) and visit(f, v1, v2), bad_variant_access
+//   get_if<T>(&v), visit(f, v) and visit(f, v1, v2), bad_variant_access,
+//   operator== (and the operator!= C++20 generates from it)
 //
 // Sections:
 //   1. Construction (default, from each alternative)
@@ -19,6 +20,7 @@
 //   6. Lifetime: destructor and switching alternatives
 //   7. visit (one variant, two variants, return types)
 //   8. Compiler-shaped usage (Value, optional<Value>, Vector<Value>)
+//   9. operator== / operator!=
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -634,4 +636,89 @@ TEST_CASE("checking and reading a Value like the unary evaluator", "[variant][us
     };
     REQUIRE(ricc::get<int>(negate(Value{4})) == -4);
     REQUIRE_THROWS_AS(negate(Value{true}), std::runtime_error);
+}
+
+// ---------------------------------------------------------------------------
+// 9. operator== / operator!=
+//
+// Same rule as std::variant: equal when both hold the same alternative and
+// those two values compare equal. Different alternatives are never equal,
+// even when the values look the same (int 1 vs double 1.0).
+// ---------------------------------------------------------------------------
+
+TEST_CASE("same alternative with equal values compares equal", "[variant][compare]") {
+    const ricc::variant<int, double> a{7};
+    const ricc::variant<int, double> b{7};
+    REQUIRE(a == b);
+    REQUIRE_FALSE(a != b);
+}
+
+TEST_CASE("same alternative with different values is not equal", "[variant][compare]") {
+    const ricc::variant<int, double> a{7};
+    const ricc::variant<int, double> b{8};
+    REQUIRE_FALSE(a == b);
+    REQUIRE(a != b);
+}
+
+TEST_CASE("different alternatives are not equal even if the values match", "[variant][compare]") {
+    const ricc::variant<int, double> a{1};
+    const ricc::variant<int, double> b{1.0};
+    REQUIRE_FALSE(a == b);
+    REQUIRE_FALSE(b == a);
+    REQUIRE(a != b);
+}
+
+TEST_CASE("int and bool alternatives stay distinct", "[variant][compare]") {
+    // The compiler's Value holds both: int 1 and bool true must not be equal.
+    REQUIRE_FALSE(Value{1} == Value{true});
+    REQUIRE_FALSE(Value{0} == Value{false});
+}
+
+TEST_CASE("a variant equals itself and its copy", "[variant][compare]") {
+    const ricc::variant<int, std::string> a{std::string(40, 'x')};
+    const ricc::variant<int, std::string> copy{a};
+    REQUIRE(a == a);
+    REQUIRE(a == copy);
+    REQUIRE(copy == a);
+}
+
+TEST_CASE("compares alternatives that cannot be compared with each other", "[variant][compare]") {
+    // int == std::string does not compile, so operator== must only ever
+    // compare two values of the same type. This test mostly checks that.
+    const ricc::variant<int, std::string> i{5};
+    const ricc::variant<int, std::string> s{std::string("5")};
+    REQUIRE_FALSE(i == s);
+    REQUIRE(s == ricc::variant<int, std::string>{std::string("5")});
+    REQUIRE(s != ricc::variant<int, std::string>{std::string("6")});
+}
+
+TEST_CASE("default-constructed monostate Values are equal", "[variant][compare]") {
+    REQUIRE(Value{} == Value{});
+    REQUIRE(Value{} != Value{0});
+}
+
+TEST_CASE("function Values compare by pointer", "[variant][compare]") {
+    auto fn = std::make_shared<FunctionObj>(FunctionObj{2});
+    const Value a{fn};
+    const Value b{fn};
+    const Value other{std::make_shared<FunctionObj>(FunctionObj{2})};
+    REQUIRE(a == b);
+    REQUIRE(a != other);  // same contents, different object
+}
+
+TEST_CASE("comparison works after assignment switches the alternative", "[variant][compare]") {
+    ricc::variant<int, double> a{1};
+    const ricc::variant<int, double> b{2.5};
+    REQUIRE(a != b);
+    a = b;
+    REQUIRE(a == b);
+}
+
+TEST_CASE("comparing Values like the compiler's evaluator test", "[variant][compare][usage]") {
+    // tests/evaluator_tests.cpp: if (actual == expected) ...
+    auto expect = [](const Value& actual, const Value& expected) { return actual == expected; };
+    REQUIRE(expect(add(Value{2}, Value{3}), Value{5}));
+    REQUIRE(expect(add(Value{1.5}, Value{1.5}), Value{3.0}));
+    REQUIRE_FALSE(expect(add(Value{2}, Value{3}), Value{5.0}));
+    REQUIRE_FALSE(expect(Value{5}, Value{}));
 }
