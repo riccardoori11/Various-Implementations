@@ -263,4 +263,59 @@ constexpr const T* get_if(const variant<First,Rest...>* value) noexcept{
 				return nullptr;
 		}
 }
+
+namespace detail{
+		template<typename T, typename First, typename ...Rest, typename Callable>
+		decltype(auto) invoke_one(Callable& f,variant<First,Rest...>& v){
+				return f(get<T>(v));
+		}
+
+		template<typename T, typename First, typename ...Rest, typename Callable>
+		decltype(auto) invoke_one(Callable& f,const variant<First,Rest...>& v){
+				return f(get<T>(v));
+		}
+}
+
+template <typename First, typename ...Rest, typename Callable>
+decltype(auto) visit(Callable&& f, variant<First, Rest...>& v){
+		using RETURN = std::invoke_result_t<Callable&, First&>;
+		// runtime value has to choose between code that was generated for different types at compile time
+		using CALL_F = RETURN(*)(Callable&, variant<First,Rest...>&);
+
+		constexpr CALL_F invocations[] = {
+				&detail::invoke_one<First>,
+				&detail::invoke_one<Rest>...
+		}; 
+		return invocations[v.index()]
+				(
+				 f,v
+				);
+}
+
+
+template <typename First, typename ...Rest, typename Callable>
+decltype(auto) visit(Callable&& f,const variant<First, Rest...>& v){
+		using RETURN = std::invoke_result_t<Callable&, const First&>;
+		// runtime value has to choose between code that was generated for different types at compile time
+		using CALL_F = RETURN(*)(Callable&, const variant<First,Rest...>&);
+
+		constexpr CALL_F invocations[] = {
+				&detail::invoke_one<First>,
+				&detail::invoke_one<Rest>...
+		}; 
+		return invocations[v.index()]
+				(
+				 f,v
+				);
+}
+
+template <typename Callable, typename V1, typename V2>
+decltype(auto) visit(Callable&& f, V1&& v1, V2&& v2){
+		return ricc::visit([&](auto& x) -> decltype(auto){
+				return ricc::visit([&](auto& y) -> decltype(auto){
+						return f(x, y);
+				}, v2);
+		}, v1);
+}
+
 }
