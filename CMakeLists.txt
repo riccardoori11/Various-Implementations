@@ -350,11 +350,9 @@ target_compile_options(shared_ptr_tests PRIVATE -Wall -Wextra -Wpedantic)
 
 # In this file the pointed-to type is incomplete. `delete` on an incomplete type
 # is only a warning in GCC and skips the destructor, so make it an error here.
-# TEMPORARILY DISABLED while shared_ptr deletes through T* directly.
-# Re-enable once the control block owns the destroy function.
-# set_source_files_properties(tests/test_shared_ptr_incomplete.cpp
-#     PROPERTIES COMPILE_OPTIONS "-Werror=delete-incomplete"
-# )
+set_source_files_properties(tests/test_shared_ptr_incomplete.cpp
+    PROPERTIES COMPILE_OPTIONS "-Werror=delete-incomplete"
+)
 
 if(ENABLE_SANITIZERS)
     target_compile_options(shared_ptr_tests PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer -g)
